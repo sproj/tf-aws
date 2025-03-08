@@ -1,0 +1,108 @@
+# Terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Local .terraform directories
+.terraform/
+
+# Exclude all .tfvars files, which are likely to contain sensitive data
+*.tfvars
+*.tfvars.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux system files
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# AWS credentials and configuration
+.aws/
+aws.json
+credentials
+config
+
+# Logs
+*.log
+logs/
+
+# Local environment variables
+.env
+.env.*
+*.env
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build outputs
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Script output files
+output/
+outputs/
+
+# Kubernetes temporary files
+kubeconfig
+*.kubeconfig
+.kube/
+
+# Docker related
+.docker/
+*.tar
+*.tar.gz
+
+# Python virtual environments (if you use Python scripts)
+venv/
+env/
+.venv/
+.env/
+__pycache__/
+*.py[cod]
+*$py.class
