@@ -1,3 +1,9 @@
+variable "project_name" {
+  description = "Short name for the project"
+  type        = string
+  default     = "tfaws"
+}
+
 variable "aws_region" {
   description = "AWS region for state backend resources."
   type        = string
@@ -9,12 +15,9 @@ variable "env" {
   type        = string
 }
 
-variable "s3_bucket_name" {
-  description = "Name for the Terraform state S3 bucket."
-  type        = string
+# S3 bucket name derived
+locals {
+  s3_bucket_name = "${var.project_name}-${var.env}-state-backend"
+  dynamodb_table_name = "${var.project_name}-${var.env}-lock-backend"
 }
 
-variable "dynamodb_table_name" {
-  description = "Name for the DynamoDB table used for state locking."
-  type        = string
-}

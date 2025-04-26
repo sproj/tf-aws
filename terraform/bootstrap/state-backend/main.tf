@@ -4,7 +4,7 @@ provider "aws" {
 
 # S3 Bucket for Terraform State
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = var.s3_bucket_name
+  bucket = local.s3_bucket_name
 
   # Enable bucket versioning for safety
   versioning {
@@ -39,7 +39,7 @@ resource "aws_s3_bucket_public_access_block" "block_public_access" {
 
 # DynamoDB Table for Terraform State Locking
 resource "aws_dynamodb_table" "terraform_locks" {
-  name         = var.dynamodb_table_name
+  name         = local.dynamodb_table_name
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 
