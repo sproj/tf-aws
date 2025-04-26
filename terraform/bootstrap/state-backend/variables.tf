@@ -10,6 +10,11 @@ variable "aws_region" {
   default     = "eu-west-1"
 }
 
+variable "aws_profile" {
+  description = "The AWS profile name to use from ~/.aws/credentials."
+  type        = string
+}
+
 variable "env" {
   description = "Environment name (e.g., dev, prod)."
   type        = string
@@ -17,7 +22,7 @@ variable "env" {
 
 # S3 bucket name derived
 locals {
-  s3_bucket_name = "${var.project_name}-${var.env}-state-backend"
+  s3_bucket_name      = "${var.project_name}-${var.env}-state-backend"
   dynamodb_table_name = "${var.project_name}-${var.env}-lock-backend"
 }
 
