@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
     bucket         = "tfaws-dev-state-backend"
-    key            = "${var.env}/${var.deployment_type}/terraform.tfstate"
-    region         = var.aws_region
+    key            = "bootstrap/terraform.tfstate"
+    region         = "eu-west-1"
     dynamodb_table = "tfaws-dev-lock-backend"
     encrypt        = true
   }

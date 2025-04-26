@@ -1,5 +1,6 @@
 provider "aws" {
   region = var.aws_region
+  profile = var.aws_profile
 }
 
 # S3 Bucket for Terraform State
