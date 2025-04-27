@@ -4,6 +4,6 @@ variable "name_prefix" {
 }
 
 variable "bootstrapper_user_name" {
-  description = "IAM user allowed to assume these roles."
+  description = "IAM user allowed to assume this role."
   type        = string
 }
