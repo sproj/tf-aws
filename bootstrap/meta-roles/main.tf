@@ -31,6 +31,7 @@ resource "aws_iam_role" "infrastructure_manager" {
 
   tags = {
     Terraform = "true"
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
 
@@ -68,6 +69,10 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
       }
     ]
   })
+
+  tags = {
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "infrastructure_manager_attach" {
