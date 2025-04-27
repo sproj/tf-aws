@@ -1,5 +1,5 @@
 resource "aws_iam_role" "kubernetes_ec2_manager" {
-  name = "${var.name_prefix}-k8s-ec2-manager"
+  name = "k8s-ec2-manager"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -13,13 +13,13 @@ resource "aws_iam_role" "kubernetes_ec2_manager" {
   })
 
   tags = {
-    Name      = "${var.name_prefix}-k8s-ec2-manager"
+    Name      = "k8s-ec2-manager"
     ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
 
 resource "aws_iam_policy" "kubernetes_ec2_manager_policy" {
-  name = "${var.name_prefix}-k8s-ec2-manager-policy"
+  name = "k8s-ec2-manager-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -36,12 +36,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_policy" {
           "autoscaling:UpdateAutoScalingGroup",
           "iam:PassRole"
         ]
-        Resource = "*"
-        Condition = {
-          StringEquals = {
-            "aws:ResourceTag/NamePrefix" = var.name_prefix
-          }
-        }
+        Resource = ["*"]
       }
     ]
   })
