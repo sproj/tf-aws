@@ -48,7 +48,9 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "iam:GetRole",
           "iam:UpdateRole",
           "iam:PassRole",
+          "iam:TagRole",
           "iam:AttachRolePolicy",
+          "iam:GetPolicyVersion",
           "iam:DetachRolePolicy",
           "iam:CreatePolicy",
           "iam:DeletePolicy",
@@ -56,7 +58,11 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "iam:ListPolicies",
           "iam:ListRoles",
           "iam:PutRolePolicy",
-          "iam:DeleteRolePolicy"
+          "iam:DeleteRolePolicy",
+          "iam:ListRolePolicies",
+          "iam:ListPolicyVersions",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListInstanceProfilesForRole"
         ],
         Resource = "*"
       }
