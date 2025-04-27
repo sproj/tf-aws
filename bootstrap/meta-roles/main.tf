@@ -1,93 +1,70 @@
-# Meta-roles for the initial development phase
-# These roles are intentionally permissive for ease of development
-# They will be restricted once all resource-specific roles are working correctly
-
-# Creator role - Used during initial setup and resource creation
-resource "aws_iam_role" "infrastructure_creator" {
-  name = "infrastructure-creator-role"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${var.account_id}:root"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "InfrastructureCreatorRole"
-    Environment = var.environment
-    Terraform   = "true"
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
   }
 }
 
-# Attach permissive policy to creator role for development
-resource "aws_iam_role_policy_attachment" "creator_power_user" {
-  role       = aws_iam_role.infrastructure_creator.name
-  policy_arn = "arn:aws:iam:aws:policy/PowerUserAccess"
+provider "aws" {
+  region = var.aws_region
 }
 
-# Manager role - Used to manage existing resources
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "infrastructure_manager" {
-  name = "infrastructure-manager-role"
-  
+  name = "infrastructure-manager"
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${var.account_id}:root"
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${var.bootstrapper_user_name}"
         }
+        Action = "sts:AssumeRole"
       }
     ]
   })
 
   tags = {
-    Name        = "InfrastructureManagerRole"
-    Environment = var.environment
-    Terraform   = "true"
+    Terraform = "true"
   }
 }
 
-# Attach permissive policy to manager role for development
-resource "aws_iam_role_policy_attachment" "manager_power_user" {
+resource "aws_iam_policy" "infrastructure_manager_policy" {
+  name        = "infrastructure-manager-policy"
+  description = "Allows creation and management of IAM roles and policies for infrastructure deployments."
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "iam:CreateRole",
+          "iam:DeleteRole",
+          "iam:GetRole",
+          "iam:UpdateRole",
+          "iam:PassRole",
+          "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy",
+          "iam:CreatePolicy",
+          "iam:DeletePolicy",
+          "iam:GetPolicy",
+          "iam:ListPolicies",
+          "iam:ListRoles",
+          "iam:PutRolePolicy",
+          "iam:DeleteRolePolicy"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "infrastructure_manager_attach" {
   role       = aws_iam_role.infrastructure_manager.name
-  policy_arn = "arn:aws:iam:aws:policy/PowerUserAccess"
-}
-
-# Reader role - Used for read-only access to resources
-resource "aws_iam_role" "infrastructure_reader" {
-  name = "infrastructure-reader-role"
-  
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          AWS = "arn:aws:iam::${var.account_id}:root"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "InfrastructureReaderRole"
-    Environment = var.environment
-    Terraform   = "true"
-  }
-}
-
-# Attach read-only policy to reader role
-resource "aws_iam_role_policy_attachment" "reader_readonly" {
-  role       = aws_iam_role.infrastructure_reader.name
-  policy_arn = "arn:aws:iam:aws:policy/ReadOnlyAccess"
+  policy_arn = aws_iam_policy.infrastructure_manager_policy.arn
 }
