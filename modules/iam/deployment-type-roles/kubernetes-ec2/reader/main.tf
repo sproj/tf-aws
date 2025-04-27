@@ -13,7 +13,8 @@ resource "aws_iam_role" "kubernetes_ec2_reader" {
   })
 
   tags = {
-    Name = "${var.name_prefix}-k8s-ec2-reader"
+    Name      = "${var.name_prefix}-k8s-ec2-reader"
+    ManagedBy = "${data.aws_caller_identity.current.name}"
   }
 }
 
