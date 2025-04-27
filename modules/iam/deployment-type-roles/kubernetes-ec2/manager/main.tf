@@ -14,7 +14,7 @@ resource "aws_iam_role" "kubernetes_ec2_manager" {
 
   tags = {
     Name      = "${var.name_prefix}-k8s-ec2-manager"
-    ManagedBy = "${data.aws_caller_identity.current.name}"
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
 
