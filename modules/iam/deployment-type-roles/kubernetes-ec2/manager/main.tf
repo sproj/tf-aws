@@ -51,4 +51,10 @@ resource "aws_iam_role_policy_attachment" "manager_attach" {
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "manager_backend_access" {
+  role       = aws_iam_role.kubernetes_ec2_manager.name
+  policy_arn = var.backend_full_access_policy_arn
+}
+
+
 data "aws_caller_identity" "current" {}

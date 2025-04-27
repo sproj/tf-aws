@@ -42,6 +42,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_policy" {
           "ec2:DeleteTags",
           "ec2:AllocateAddress",
           "ec2:ReleaseAddress",
+          "ec2:CreateVpc",
           "elasticloadbalancing:CreateLoadBalancer",
           "elasticloadbalancing:DeleteLoadBalancer",
           "autoscaling:CreateAutoScalingGroup",
@@ -62,5 +63,11 @@ resource "aws_iam_role_policy_attachment" "creator_attach" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_policy.arn
 }
+
+resource "aws_iam_role_policy_attachment" "creator_backend_access" {
+  role       = aws_iam_role.kubernetes_ec2_creator.name
+  policy_arn = var.backend_full_access_policy_arn
+}
+
 
 data "aws_caller_identity" "current" {}

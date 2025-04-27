@@ -53,4 +53,9 @@ resource "aws_iam_role_policy_attachment" "reader_attach" {
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "reader_backend_access" {
+  role       = aws_iam_role.kubernetes_ec2_reader.name
+  policy_arn = var.backend_readonly_access_policy_arn
+}
+
 data "aws_caller_identity" "current" {}
