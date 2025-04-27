@@ -11,6 +11,16 @@ provider "aws" {
   region = var.aws_region
 }
 
+data "terraform_remote_state" "state_backend" {
+  backend = "s3"
+  config = {
+    bucket  = "tfaws-dev-state-backend"
+    key     = "bootstrap/terraform.tfstate"
+    region  = "eu-west-1"
+    profile = "super-user"
+  }
+}
+
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "infrastructure_manager" {
@@ -79,4 +89,9 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
 resource "aws_iam_role_policy_attachment" "infrastructure_manager_attach" {
   role       = aws_iam_role.infrastructure_manager.name
   policy_arn = aws_iam_policy.infrastructure_manager_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "infrastructure_manager_backend_access" {
+  role       = aws_iam_role.infrastructure_manager.name
+  policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
 }
