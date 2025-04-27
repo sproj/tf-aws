@@ -1,9 +1,4 @@
-variable "name_prefix" {
-  description = "Prefix for resource naming and access control."
-  type        = string
-}
-
-variable "bootstrapper_user_name" {
+variable "bootstrapper_role_name" {
   description = "IAM user allowed to assume these roles."
   type        = string
 }

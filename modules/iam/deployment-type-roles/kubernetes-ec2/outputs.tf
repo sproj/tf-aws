@@ -39,7 +39,7 @@ output "creator_profile_snippet" {
   value       = <<EOT
 [profile kubernetes-ec2-creator]
 role_arn = ${module.creator.role_arn}
-source_profile = ${var.bootstrapper_user_name}
+source_profile = ${var.bootstrapper_role_name}
 region = ${var.aws_region}
 EOT
 }
@@ -49,7 +49,7 @@ output "manager_profile_snippet" {
   value       = <<EOT
 [profile kubernetes-ec2-manager]
 role_arn = ${module.manager.role_arn}
-source_profile = ${var.bootstrapper_user_name}
+source_profile = ${var.bootstrapper_role_name}
 region = ${var.aws_region}
 EOT
 }
@@ -59,7 +59,7 @@ output "reader_profile_snippet" {
   value       = <<EOT
 [profile kubernetes-ec2-reader]
 role_arn = ${module.reader.role_arn}
-source_profile = ${var.bootstrapper_user_name}
+source_profile = ${var.bootstrapper_role_name}
 region = ${var.aws_region}
 EOT
 }

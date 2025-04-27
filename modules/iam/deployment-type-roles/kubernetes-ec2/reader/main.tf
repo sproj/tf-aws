@@ -6,7 +6,7 @@ resource "aws_iam_role" "kubernetes_ec2_reader" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${var.bootstrapper_user_name}"
+        AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.bootstrapper_role_name}"
       }
       Action = "sts:AssumeRole"
     }]

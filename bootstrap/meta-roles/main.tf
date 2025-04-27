@@ -56,6 +56,7 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "iam:CreatePolicy",
           "iam:DeletePolicy",
           "iam:GetPolicy",
+          "iam:TagPolicy",
           "iam:ListPolicies",
           "iam:ListRoles",
           "iam:PutRolePolicy",
