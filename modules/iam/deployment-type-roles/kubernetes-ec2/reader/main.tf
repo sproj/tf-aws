@@ -42,6 +42,10 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_policy" {
       }
     ]
   })
+
+  tags = {
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "reader_attach" {
