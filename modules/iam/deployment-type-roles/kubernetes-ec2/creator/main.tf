@@ -13,8 +13,8 @@ resource "aws_iam_role" "kubernetes_ec2_creator" {
   })
 
   tags = {
-    Name = "${var.name_prefix}-k8s-ec2-creator"
-    ManagedBy  = "${data.aws_caller_identity.current.arn}"
+    Name      = "${var.name_prefix}-k8s-ec2-creator"
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
 
@@ -57,6 +57,10 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_policy" {
       }
     ]
   })
+
+  tags = {
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "creator_attach" {
