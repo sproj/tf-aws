@@ -48,8 +48,8 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_networking_policy" {
 
 # attach reader networking policy
 resource "aws_iam_role_policy_attachment" "reader_attach_networking_policy" {
-  role       = aws_iam_role.kubernetes_ec2_reader
-  policy_arn = aws_iam_policy.kubernetes_ec2_reader_networking_policy
+  role       = aws_iam_role.kubernetes_ec2_reader.name
+  policy_arn = aws_iam_policy.kubernetes_ec2_reader_networking_policy.arn
 }
 
 # reader ec2 access
@@ -65,21 +65,21 @@ data "aws_iam_policy_document" "kubernetes_ec2_reader_ec2_access" {
 # reader ec2 policy
 resource "aws_iam_policy" "kubernetes_ec2_reader_ec2_policy" {
   name        = "kubernetes-ec2-reader-ec2-policy"
-  description = "Policy allowing kubernetes-ec2-reader to create ec2 resources"
+  description = "Policy allowing kubernetes-ec2-reader to describe ec2 resources"
   policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_ec2_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
-# attach creator ec2 policy
+# attach reader ec2 policy
 resource "aws_iam_role_policy_attachment" "reader_attach_ec2_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_ec2_policy.arn
 }
 
 # reader elasticloadbalancing actions
-data "aws_iam_policy_document" "kubernetes_ec2_manager_elasticloadbalancing_access" {
+data "aws_iam_policy_document" "kubernetes_ec2_reader_elasticloadbalancing_access" {
   statement {
     sid       = "AllowElasticLoadbalancingDescriptionActions"
     effect    = "Allow"
@@ -91,8 +91,8 @@ data "aws_iam_policy_document" "kubernetes_ec2_manager_elasticloadbalancing_acce
 # reader elasticloadbalancing policy
 resource "aws_iam_policy" "kubernetes_ec2_reader_elasticloadbalancing_policy" {
   name        = "kubernetes-ec2-reader-elasticloadbalancing-policy"
-  description = "Policy allowing kubernetes-ec2-reader to manage elasticloadbalancing resources"
-  policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_elasticloadbalancing_access.json
+  description = "Policy allowing kubernetes-ec2-reader to describe elasticloadbalancing resources"
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_elasticloadbalancing_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
@@ -106,7 +106,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach_elasticloadbalancing_po
 }
 
 # reader autoscaling actions
-data "aws_iam_policy_document" "kubernetes_ec2_manager_autoscaling_access" {
+data "aws_iam_policy_document" "kubernetes_ec2_reader_autoscaling_access" {
   statement {
     sid       = "AllowAutoScalingDescriptionActions"
     effect    = "Allow"
@@ -117,9 +117,9 @@ data "aws_iam_policy_document" "kubernetes_ec2_manager_autoscaling_access" {
 
 # reader autoscaling policy
 resource "aws_iam_policy" "kubernetes_ec2_reader_autoscaling_policy" {
-  name        = "kubernetes-ec2-creator-autoscaling-policy"
-  description = "Policy allowing kubernetes-ec2-reader to manage autoscaling resources"
-  policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_autoscaling_access.json
+  name        = "kubernetes-ec2-reader-autoscaling-policy"
+  description = "Policy allowing kubernetes-ec2-reader to describe autoscaling resources"
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_autoscaling_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
@@ -133,7 +133,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach_autoscaling_policy" {
 }
 
 # reader iam actions
-data "aws_iam_policy_document" "kubernetes_ec2_manager_iam_access" {
+data "aws_iam_policy_document" "kubernetes_ec2_reader_iam_access" {
   statement {
     sid       = "AllowIAMDescriptionActions"
     effect    = "Allow"
@@ -146,7 +146,7 @@ data "aws_iam_policy_document" "kubernetes_ec2_manager_iam_access" {
 resource "aws_iam_policy" "kubernetes_ec2_reader_iam_policy" {
   name        = "kubernetes-ec2-reader-iam-policy"
   description = "Policy allowing kubernetes-ec2-reader to manage iam resources"
-  policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_iam_access.json
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_iam_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
