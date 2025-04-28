@@ -6,8 +6,28 @@ output "creator_role_arn" {
   value = module.creator.role_arn
 }
 
-output "creator_policy_arn" {
-  value = module.creator.policy_arn
+output "creator_networking_policy_arn" {
+  value = module.creator.creator_networking_policy_arn
+}
+
+output "creator_ec2_policy_arn" {
+  value = module.creator.creator_ec2_policy_arn
+}
+
+output "creator_elasticloadbalancing_policy_arn" {
+  value = module.creator.creator_elasticloadbalancing_policy_arn
+}
+
+output "creator_autoscaling_policy_arn" {
+  value = module.creator.creator_autoscaling_policy_arn
+}
+
+output "creator_iam_policy_arn" {
+  value = module.creator.creator_iam_policy_arn
+}
+
+output "creator_ecr_policy_arn" {
+  value = module.creator.creator_ecr_policy_arn
 }
 
 output "manager_role_name" {
@@ -18,8 +38,28 @@ output "manager_role_arn" {
   value = module.manager.role_arn
 }
 
-output "manager_policy_arn" {
-  value = module.manager.policy_arn
+output "manager_networking_policy_arn" {
+  value = module.manager.manager_networking_policy_arn
+}
+
+output "manager_ec2_policy_arn" {
+  value = module.manager.manager_ec2_policy_arn
+}
+
+output "manager_elasticloadbalancing_policy_arn" {
+  value = module.manager.manager_elasticloadbalancing_policy_arn
+}
+
+output "manager_autoscaling_policy_arn" {
+  value = module.manager.manager_autoscaling_policy_arn
+}
+
+output "manager_iam_policy_arn" {
+  value = module.manager.manager_iam_policy_arn
+}
+
+output "manager_ecr_policy_arn" {
+  value = module.manager.manager_ecr_policy_arn
 }
 
 output "reader_role_name" {
@@ -30,8 +70,28 @@ output "reader_role_arn" {
   value = module.reader.role_arn
 }
 
-output "reader_policy_arn" {
-  value = module.reader.policy_arn
+output "reader_networking_policy_arn" {
+  value = module.reader.reader_networking_policy_arn
+}
+
+output "reader_ec2_policy_arn" {
+  value = module.reader.reader_ec2_policy_arn
+}
+
+output "reader_elasticloadbalancing_policy_arn" {
+  value = module.reader.reader_elasticloadbalancing_policy_arn
+}
+
+output "reader_autoscaling_policy_arn" {
+  value = module.reader.reader_autoscaling_policy_arn
+}
+
+output "reader_iam_policy_arn" {
+  value = module.reader.reader_iam_policy_arn
+}
+
+output "reader_ecr_policy_arn" {
+  value = module.reader.reader_ecr_policy_arn
 }
 
 output "creator_profile_snippet" {
