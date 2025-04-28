@@ -52,11 +52,21 @@ resource "aws_iam_role_policy_attachment" "reader_attach_networking_policy" {
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_networking_policy
 }
 
+# reader ec2 access
+data "aws_iam_policy_document" "kubernetes_ec2_reader_ec2_access" {
+  statement {
+    sid       = "AllowEC2DescriptionActions"
+    effect    = "Allow"
+    actions   = var.networking_allowed_actions
+    resources = ["*"]
+  }
+}
+
 # reader ec2 policy
 resource "aws_iam_policy" "kubernetes_ec2_reader_ec2_policy" {
   name        = "kubernetes-ec2-reader-ec2-policy"
   description = "Policy allowing kubernetes-ec2-reader to create ec2 resources"
-  policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_ec2_access.json
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_ec2_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
