@@ -22,13 +22,17 @@ locals {
         "ec2:ReplaceRoute",
         "ec2:DeleteRoute",
         "ec2:DescribeRouteTables",
-        "ec2:ModifyVpcAttribute"
+        "ec2:DescribeVpcAttribute",
+        "ec2:ModifyVpcAttribute",
+        "ec2:ModifySubnetAttribute",
+        "ec2:DescribeNetworkInterfaces"
       ]
       manager = [
         "ec2:DescribeVpcs",
         "ec2:DescribeSubnets",
         "ec2:DescribeInternetGateways",
         "ec2:DescribeRouteTables",
+        "ec2:DescribeVpcAttribute",
         "ec2:ModifyVpcAttribute"
       ]
       reader = [
