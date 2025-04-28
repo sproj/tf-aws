@@ -48,6 +48,8 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_policy" {
 
 data "aws_iam_policy_document" "kubernetes_ec2_manager_networking_access" {
   statement {
+    sid       = "AllowNetworkingManagementActions"
+    effect    = "Allow"
     actions   = var.networking_allowed_actions
     resources = ["*"]
   }

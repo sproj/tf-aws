@@ -50,6 +50,8 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_policy" {
 
 data "aws_iam_policy_document" "kubernetes_ec2_reader_networking_access" {
   statement {
+    sid       = "AllowNetworkingDescriptionActions"
+    effect    = "Allow"
     actions   = var.networking_allowed_actions
     resources = ["*"]
   }

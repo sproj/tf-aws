@@ -61,6 +61,8 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_policy" {
 
 data "aws_iam_policy_document" "kubernetes_ec2_creator_networking_access" {
   statement {
+    sid       = "AllowNetworkingCreationActions"
+    effect    = "Allow"
     actions   = var.networking_allowed_actions
     resources = ["*"]
   }
