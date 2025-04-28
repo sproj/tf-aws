@@ -10,3 +10,23 @@ variable "backend_full_access_policy_arn" {
 variable "networking_allowed_actions" {
   type = list(string)
 }
+
+variable "ec2_allowed_actions" {
+  type = list(string)
+}
+
+variable "elasticloadbalancing_allowed_actions" {
+  type = list(string)
+}
+
+variable "autoscaling_allowed_actions" {
+  type = list(string)
+}
+
+variable "iam_allowed_actions" {
+  type = list(string)
+}
+
+variable "ecr_allowed_actions" {
+  type = list(string)
+}
