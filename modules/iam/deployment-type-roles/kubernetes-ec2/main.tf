@@ -27,7 +27,7 @@ module "manager" {
 
   bootstrapper_role_name               = var.bootstrapper_role_name
   backend_full_access_policy_arn       = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
-  networking_allowed_actions           = local.kubernetes_ec2_networking_actions.manager
+  networking_allowed_actions           = local.kubernetes_ec2_allowed_actions.networking.manager
   ec2_allowed_actions                  = local.kubernetes_ec2_allowed_actions.ec2.manager
   elasticloadbalancing_allowed_actions = local.kubernetes_ec2_allowed_actions.elasticloadbalancing.manager
   autoscaling_allowed_actions          = local.kubernetes_ec2_allowed_actions.autoscaling.manager
@@ -40,7 +40,7 @@ module "reader" {
 
   bootstrapper_role_name               = var.bootstrapper_role_name
   backend_readonly_access_policy_arn   = data.terraform_remote_state.state_backend.outputs.terraform_backend_readonly_access_policy_arn
-  networking_allowed_actions           = local.kubernetes_ec2_networking_actions.reader
+  networking_allowed_actions           = local.kubernetes_ec2_allowed_actions.networking.reader
   ec2_allowed_actions                  = local.kubernetes_ec2_allowed_actions.ec2.reader
   elasticloadbalancing_allowed_actions = local.kubernetes_ec2_allowed_actions.elasticloadbalancing.reader
   autoscaling_allowed_actions          = local.kubernetes_ec2_allowed_actions.autoscaling.reader
