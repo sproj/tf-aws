@@ -6,3 +6,7 @@ variable "bootstrapper_role_name" {
 variable "backend_readonly_access_policy_arn" {
   type = string
 }
+
+variable "networking_allowed_actions" {
+  type = list(string)
+}

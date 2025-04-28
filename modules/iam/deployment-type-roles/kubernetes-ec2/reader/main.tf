@@ -48,6 +48,23 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_policy" {
   }
 }
 
+data "aws_iam_policy_document" "kubernetes_ec2_reader_networking_access" {
+  statement {
+    actions   = var.networking_allowed_actions
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "kubernetes_ec2_reader_networking_policy" {
+  name        = "kubernetes-ec2-reader-networking-policy"
+  description = "Policy allowing kubernetes-ec2-reader to read networking resources"
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_reader_networking_access.json
+
+  tags = {
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
+  }
+}
+
 resource "aws_iam_role_policy_attachment" "reader_attach" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_policy.arn
@@ -57,5 +74,11 @@ resource "aws_iam_role_policy_attachment" "reader_backend_access" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = var.backend_readonly_access_policy_arn
 }
+
+resource "aws_iam_role_policy_attachment" "reader_networking_access" {
+  role       = aws_iam_role.kubernetes_ec2_reader
+  policy_arn = aws_iam_policy.kubernetes_ec2_reader_policy
+}
+
 
 data "aws_caller_identity" "current" {}
