@@ -14,6 +14,7 @@ module "creator" {
 
   bootstrapper_role_name         = var.bootstrapper_role_name
   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
+  networking_allowed_actions     = local.kubernetes_ec2_networking_actions.creator
 }
 
 module "manager" {
@@ -21,6 +22,7 @@ module "manager" {
 
   bootstrapper_role_name         = var.bootstrapper_role_name
   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
+  networking_allowed_actions     = local.kubernetes_ec2_networking_actions.manager
 }
 
 module "reader" {
@@ -28,4 +30,5 @@ module "reader" {
 
   bootstrapper_role_name             = var.bootstrapper_role_name
   backend_readonly_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_readonly_access_policy_arn
+  networking_allowed_actions         = local.kubernetes_ec2_networking_actions.reader
 }

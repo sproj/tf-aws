@@ -46,6 +46,23 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_policy" {
   }
 }
 
+data "aws_iam_policy_document" "kubernetes_ec2_manager_networking_access" {
+  statement {
+    actions   = var.networking_allowed_actions
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "kubernetes_ec2_manager_networking_policy" {
+  name        = "kubernetes-ec2-manager-networking-policy"
+  description = "Policy allowing kubernetes-ec2-manager to manage networking resources"
+  policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_networking_access.json
+
+  tags = {
+    ManagedBy = "${data.aws_caller_identity.current.arn}"
+  }
+}
+
 resource "aws_iam_role_policy_attachment" "manager_attach" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_policy.arn
@@ -56,5 +73,9 @@ resource "aws_iam_role_policy_attachment" "manager_backend_access" {
   policy_arn = var.backend_full_access_policy_arn
 }
 
+resource "aws_iam_role_policy_attachment" "manager_networking_access" {
+  role       = aws_iam_role.kubernetes_ec2_manager.name
+  policy_arn = aws_iam_policy.kubernetes_ec2_manager_policy
+}
 
 data "aws_caller_identity" "current" {}
