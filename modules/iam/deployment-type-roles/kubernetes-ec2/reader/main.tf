@@ -71,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach" {
 # reader elasticloadbalancing actions
 data "aws_iam_policy_document" "kubernetes_ec2_manager_elasticloadbalancing_access" {
   statement {
-    sid       = "AllowElasticLoadbalancingCreationActions"
+    sid       = "AllowElasticLoadbalancingDescriptionActions"
     effect    = "Allow"
     actions   = var.elasticloadbalancing_allowed_actions
     resources = ["*"]
@@ -98,7 +98,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach" {
 # reader autoscaling actions
 data "aws_iam_policy_document" "kubernetes_ec2_manager_autoscaling_access" {
   statement {
-    sid       = "AllowAutoScalingCreationActions"
+    sid       = "AllowAutoScalingDescriptionActions"
     effect    = "Allow"
     actions   = var.autoscaling_allowed_actions
     resources = ["*"]
@@ -125,7 +125,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach" {
 # reader iam actions
 data "aws_iam_policy_document" "kubernetes_ec2_manager_iam_access" {
   statement {
-    sid       = "AllowIAMCreationActions"
+    sid       = "AllowIAMDescriptionActions"
     effect    = "Allow"
     actions   = var.iam_allowed_actions
     resources = ["*"]
@@ -152,7 +152,7 @@ resource "aws_iam_role_policy_attachment" "reader_attach" {
 # reader ecr actions
 data "aws_iam_policy_document" "kubernetes_ec2_reader_ecr_access" {
   statement {
-    sid       = "AllowECRCreationActions"
+    sid       = "AllowECRDescriptionActions"
     effect    = "Allow"
     actions   = var.iam_allowed_actions
     resources = ["*"]
