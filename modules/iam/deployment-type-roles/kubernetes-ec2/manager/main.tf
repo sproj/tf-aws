@@ -50,13 +50,13 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_networking_policy" {
 # attach manager networking policy
 resource "aws_iam_role_policy_attachment" "manager_attach_networking_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
-  policy_arn = aws_iam_policy.kubernetes_ec2_manager_networking_policy
+  policy_arn = aws_iam_policy.kubernetes_ec2_manager_networking_policy.arn
 }
 
 # manager ec2 actions
 data "aws_iam_policy_document" "kubernetes_ec2_manager_ec2_access" {
   statement {
-    sid       = "AllowEC2CreationActions"
+    sid       = "AllowEC2ManagementActions"
     effect    = "Allow"
     actions   = var.ec2_allowed_actions
     resources = ["*"]
@@ -66,14 +66,14 @@ data "aws_iam_policy_document" "kubernetes_ec2_manager_ec2_access" {
 # manager ec2 policy
 resource "aws_iam_policy" "kubernetes_ec2_manager_ec2_policy" {
   name        = "kubernetes-ec2-manager-ec2-policy"
-  description = "Policy allowing kubernetes-ec2-manager to create ec2 resources"
+  description = "Policy allowing kubernetes-ec2-manager to manage ec2 resources"
   policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_ec2_access.json
 
   tags = {
     ManagedBy = "${data.aws_caller_identity.current.arn}"
   }
 }
-# attach creator ec2 policy
+# attach manager ec2 policy
 resource "aws_iam_role_policy_attachment" "manager_attach_ec2_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_ec2_policy.arn
@@ -118,7 +118,7 @@ data "aws_iam_policy_document" "kubernetes_ec2_manager_autoscaling_access" {
 
 # manager autoscaling policy
 resource "aws_iam_policy" "kubernetes_ec2_manager_autoscaling_policy" {
-  name        = "kubernetes-ec2-creator-autoscaling-policy"
+  name        = "kubernetes-ec2-manager-autoscaling-policy"
   description = "Policy allowing kubernetes-ec2-manager to manage autoscaling resources"
   policy      = data.aws_iam_policy_document.kubernetes_ec2_manager_autoscaling_access.json
 
