@@ -48,7 +48,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_networking_policy" {
 }
 
 # attach manager networking policy
-resource "aws_iam_role_policy_attachment" "manager_networking_access" {
+resource "aws_iam_role_policy_attachment" "manager_attach_networking_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_networking_policy
 }
@@ -74,7 +74,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_ec2_policy" {
   }
 }
 # attach creator ec2 policy
-resource "aws_iam_role_policy_attachment" "manager_attach" {
+resource "aws_iam_role_policy_attachment" "manager_attach_ec2_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_ec2_policy.arn
 }
@@ -101,7 +101,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_elasticloadbalancing_policy" {
 }
 
 # attach manager elasticloadbalancing policy
-resource "aws_iam_role_policy_attachment" "manager_attach" {
+resource "aws_iam_role_policy_attachment" "manager_attach_elasticloadbalancing_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_elasticloadbalancing_policy.arn
 }
@@ -128,7 +128,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_autoscaling_policy" {
 }
 
 # attach manager autoscaling policy
-resource "aws_iam_role_policy_attachment" "manager_attach" {
+resource "aws_iam_role_policy_attachment" "manager_attach_autoscaling_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_autoscaling_policy.arn
 }
@@ -155,7 +155,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_iam_policy" {
 }
 
 # attach manager iam policy
-resource "aws_iam_role_policy_attachment" "manager_attach" {
+resource "aws_iam_role_policy_attachment" "manager_attach_iam_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_iam_policy.arn
 }
@@ -182,7 +182,7 @@ resource "aws_iam_policy" "kubernetes_ec2_manager_ecr_policy" {
 }
 
 # attach manager ecr policy
-resource "aws_iam_role_policy_attachment" "manager_attach" {
+resource "aws_iam_role_policy_attachment" "manager_attach_ecr_policy" {
   role       = aws_iam_role.kubernetes_ec2_manager.name
   policy_arn = aws_iam_policy.kubernetes_ec2_manager_ecr_policy.arn
 }

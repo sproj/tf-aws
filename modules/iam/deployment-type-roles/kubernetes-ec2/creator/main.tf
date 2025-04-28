@@ -48,7 +48,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_networking_policy" {
 }
 
 # attach creator networking policy
-resource "aws_iam_role_policy_attachment" "creator_networking_access" {
+resource "aws_iam_role_policy_attachment" "creator_attach_networking_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_networking_policy.arn
 }
@@ -73,7 +73,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_ec2_policy" {
   }
 }
 # attach creator ec2 policy
-resource "aws_iam_role_policy_attachment" "creator_attach" {
+resource "aws_iam_role_policy_attachment" "creator_attach_ec2_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_ec2_policy.arn
 }
@@ -100,7 +100,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_elasticloadbalancing_policy" {
 }
 
 # attach creator elasticloadbalancing policy
-resource "aws_iam_role_policy_attachment" "creator_attach" {
+resource "aws_iam_role_policy_attachment" "creator_attach_elasticloadbalancing_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_elasticloadbalancing_policy.arn
 }
@@ -127,7 +127,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_autoscaling_policy" {
 }
 
 # attach creator autoscaling policy
-resource "aws_iam_role_policy_attachment" "creator_attach" {
+resource "aws_iam_role_policy_attachment" "creator_attach_autoscaling_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_autoscaling_policy.arn
 }
@@ -154,7 +154,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_iam_policy" {
 }
 
 # attach creator iam policy
-resource "aws_iam_role_policy_attachment" "creator_attach" {
+resource "aws_iam_role_policy_attachment" "creator_attach_iam_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_iam_policy.arn
 }
@@ -181,7 +181,7 @@ resource "aws_iam_policy" "kubernetes_ec2_creator_ecr_policy" {
 }
 
 # attach creator ecr policy
-resource "aws_iam_role_policy_attachment" "creator_attach" {
+resource "aws_iam_role_policy_attachment" "creator_attach_ecr_policy" {
   role       = aws_iam_role.kubernetes_ec2_creator.name
   policy_arn = aws_iam_policy.kubernetes_ec2_creator_ecr_policy.arn
 }

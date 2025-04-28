@@ -47,7 +47,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_networking_policy" {
 }
 
 # attach reader networking policy
-resource "aws_iam_role_policy_attachment" "reader_networking_access" {
+resource "aws_iam_role_policy_attachment" "reader_attach_networking_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_networking_policy
 }
@@ -63,7 +63,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_ec2_policy" {
   }
 }
 # attach creator ec2 policy
-resource "aws_iam_role_policy_attachment" "reader_attach" {
+resource "aws_iam_role_policy_attachment" "reader_attach_ec2_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_ec2_policy.arn
 }
@@ -90,7 +90,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_elasticloadbalancing_policy" {
 }
 
 # attach reader elasticloadbalancing policy
-resource "aws_iam_role_policy_attachment" "reader_attach" {
+resource "aws_iam_role_policy_attachment" "reader_attach_elasticloadbalancing_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_elasticloadbalancing_policy.arn
 }
@@ -117,7 +117,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_autoscaling_policy" {
 }
 
 # attach reader autoscaling policy
-resource "aws_iam_role_policy_attachment" "reader_attach" {
+resource "aws_iam_role_policy_attachment" "reader_attach_autoscaling_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_autoscaling_policy.arn
 }
@@ -144,7 +144,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_iam_policy" {
 }
 
 # attach reader iam policy
-resource "aws_iam_role_policy_attachment" "reader_attach" {
+resource "aws_iam_role_policy_attachment" "reader_attach_iam_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_iam_policy.arn
 }
@@ -171,7 +171,7 @@ resource "aws_iam_policy" "kubernetes_ec2_reader_ecr_policy" {
 }
 
 # attach reader ecr policy
-resource "aws_iam_role_policy_attachment" "reader_attach" {
+resource "aws_iam_role_policy_attachment" "reader_attach_ecr_policy" {
   role       = aws_iam_role.kubernetes_ec2_reader.name
   policy_arn = aws_iam_policy.kubernetes_ec2_reader_ecr_policy.arn
 }
