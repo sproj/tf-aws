@@ -74,9 +74,13 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "iam:ListRolePolicies",
           "iam:ListPolicyVersions",
           "iam:ListAttachedRolePolicies",
-          "iam:ListInstanceProfilesForRole"
+          "iam:ListInstanceProfilesForRole",
+          "iam:CreatePolicyVersion",
+          "iam:SetDefaultPolicyVersion",
+          "iam:DeletePolicyVersion"
+
         ],
-        Resource = "*"
+        Resource = ["*"]
       }
     ]
   })
