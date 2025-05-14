@@ -34,3 +34,8 @@ phase 2:
 - Full Terraform lifecycle (apply/destroy) verified
 - Operational model (assume-role separation) working
 - Ready to build first real environment (e.g., dev-k8s-ec2)
+
+
+Left off:
+Tagging on the networking module needs some attention - same on the deployment it feeds. ManagedBy enough??
+Might want to split out roles per infra type after all. Kubernetes-ec2 should be a networking, ec2, ecr.....actors putting together an env and then plopping k8s into it.
