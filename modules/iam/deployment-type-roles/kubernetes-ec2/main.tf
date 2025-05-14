@@ -8,6 +8,56 @@ data "terraform_remote_state" "state_backend" {
   }
 }
 
+module "networking" {
+  source = "../../../infrastructure/networking"
+}
+module "ec2" {
+  source = "../../../infrastructure/ec2"
+}
+module "elasticloadbalancing" {
+  source = "../../../infrastructure/elasticloadbalancing"
+}
+module "autoscaling" {
+  source = "../../../infrastructure/autoscaling"
+}
+
+module "iam" {
+  source = "../../../infrastructure/iam"
+}
+
+module "ecr" {
+  source = "../../../infrastructure/ecr"
+}
+
+locals {
+  creator_permissions = concat(
+    module.networking.creator_permissions,
+    module.ec2.creator_permissions,
+    module.elasticloadbalancing.creator_permissions,
+    module.autoscaling.creator_permissions,
+    module.iam.creator_permissions,
+    module.ecr.creator_permissions
+    # add more as needed
+  )
+
+  manager_permissions = concat(
+    module.networking.manager_permissions,
+    module.ec2.manager_permissions,
+    module.elasticloadbalancing.manager_permissions,
+    module.autoscaling.manager_permissions,
+    module.iam.manager_permissions,
+    module.ecr.manager_permissions
+  )
+
+  reader_permissions = concat(
+    module.networking.reader_permissions,
+    module.ec2.reader_permissions,
+    module.elasticloadbalancing.reader_permissions,
+    module.autoscaling.reader_permissions,
+    module.iam.reader_permissions,
+    module.ecr.reader_permissions
+  )
+}
 
 module "creator" {
   source = "./creator"
