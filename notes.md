@@ -36,6 +36,14 @@ phase 2:
 - Ready to build first real environment (e.g., dev-k8s-ec2)
 
 
-Left off:
 Tagging on the networking module needs some attention - same on the deployment it feeds. ManagedBy enough??
 Might want to split out roles per infra type after all. Kubernetes-ec2 should be a networking, ec2, ecr.....actors putting together an env and then plopping k8s into it.
+
+Left off:
+moving permissions to infrastructure modules, link back to deployment-type module
+- deployment-type -> create one policy for each role (creator, manager...) which has the permissions for all the infra that 
+deployment will deal with
+- add boundaries
+- add conditions
+- add explicial denials
+- remove current permissions policies - AWS has a limit of 10 policies per role
