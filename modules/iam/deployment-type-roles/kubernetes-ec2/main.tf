@@ -62,8 +62,8 @@ locals {
 
 module "creator" {
   source                         = "./role"
-  role_name                      = "k8s-ec2-creator"
-  policy_name                    = "k8s-ec2-creator-policy"
+  role_name                      = "kubernetes-ec2-creator"
+  policy_name                    = "kubernetes-ec2-creator-policy"
   actions                        = local.creator_permissions
   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
   bootstrapper_role_name         = var.bootstrapper_role_name
@@ -71,8 +71,8 @@ module "creator" {
 
 module "manager" {
   source                         = "./role"
-  role_name                      = "k8s-ec2-manager"
-  policy_name                    = "k8s-ec2-manager-policy"
+  role_name                      = "kubernetes-ec2-manager"
+  policy_name                    = "kubernetes-ec2-manager-policy"
   actions                        = local.manager_permissions
   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
   bootstrapper_role_name         = var.bootstrapper_role_name
@@ -80,34 +80,9 @@ module "manager" {
 
 module "reader" {
   source                         = "./role"
-  role_name                      = "k8s-ec2-reader"
-  policy_name                    = "k8s-ec2-reader-policy"
+  role_name                      = "kubernetes-ec2-reader"
+  policy_name                    = "kubernetes-ec2-reader-policy"
   actions                        = local.reader_permissions
   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_readonly_access_policy_arn
   bootstrapper_role_name         = var.bootstrapper_role_name
 }
-
-# ###
-# module "creator" {
-#   source = "./creator"
-
-#   bootstrapper_role_name         = var.bootstrapper_role_name
-#   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
-#   permitted_actions              = local.creator_permissions
-# }
-
-# module "manager" {
-#   source = "./manager"
-
-#   bootstrapper_role_name         = var.bootstrapper_role_name
-#   backend_full_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_full_access_policy_arn
-#   permitted_actions              = local.manager_permissions
-# }
-
-# module "reader" {
-#   source = "./reader"
-
-#   bootstrapper_role_name             = var.bootstrapper_role_name
-#   backend_readonly_access_policy_arn = data.terraform_remote_state.state_backend.outputs.terraform_backend_readonly_access_policy_arn
-#   permitted_actions                  = local.reader_permissions
-# }
