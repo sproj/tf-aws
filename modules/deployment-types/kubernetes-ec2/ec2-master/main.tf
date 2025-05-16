@@ -7,32 +7,34 @@ resource "aws_instance" "master" {
   key_name               = var.key_name
 
   user_data = base64encode(<<-EOF
-    #!/bin/bash
-    apt-get update
-    apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    apt-get update
-    apt-get install -y docker.io
-    systemctl enable docker && systemctl start docker
+  #!/bin/bash
+  apt-get update
+  apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
 
-    curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-    echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
-    apt-get update
-    apt-get install -y kubelet kubeadm kubectl
-    systemctl enable kubelet && systemctl start kubelet
+  # Install containerd
+  apt-get install -y containerd
+  systemctl enable containerd
+  systemctl start containerd
 
-    kubeadm init --pod-network-cidr=10.244.0.0/16
+  # Kubernetes repo (new method)
+  mkdir -p /etc/apt/keyrings
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /" > /etc/apt/sources.list.d/kubernetes.list
+  apt-get update
+  apt-get install -y kubelet kubeadm kubectl
+  systemctl enable kubelet && systemctl start kubelet
 
-    mkdir -p /home/ubuntu/.kube
-    cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
-    chown ubuntu:ubuntu /home/ubuntu/.kube/config
+  kubeadm init --pod-network-cidr=10.244.0.0/16
 
-    su - ubuntu -c "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+  mkdir -p /home/ubuntu/.kube
+  cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+  chown ubuntu:ubuntu /home/ubuntu/.kube/config
 
-    # Allow scheduling pods on master (single node)
-    su - ubuntu -c "kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true"
-  EOF
+  sudo -u ubuntu kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+  # Allow scheduling pods on master (single node)
+  # sudo -u ubuntu -c kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
+EOF
   )
 
   tags = merge(var.tags, { Name = "${var.name_prefix}-master" })
