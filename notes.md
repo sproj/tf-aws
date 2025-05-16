@@ -48,23 +48,5 @@ deployment will deal with
 - remove current permissions policies - AWS has a limit of 10 policies per role
 
 Left off:
-- nearly able to deploy a working k8s cluster to ec2
-- It’s a common point of confusion!  
-The **EC2 key pair** must be created in AWS (either via the AWS Console, CLI, or API), not just generated locally. When you create a key pair in AWS:
-
-- AWS stores the public key and gives you the private key (`.pem` file) to download.
-- You use the key pair’s **name** in your Terraform (`key_name = "my-keypair"`).
-- The private key is used locally to SSH into your EC2 instance.
-
-**If you already have an SSH key pair locally**, you can import the public key into AWS as a new EC2 key pair:
-
-```sh
-aws ec2 import-key-pair --key-name my-keypair --public-key-material fileb://~/.ssh/id_rsa.pub
-```
-
-Then use `my-keypair` as your `key_name` in Terraform.
-
-**Summary:**  
-- The key pair must exist in AWS.
-- You use the private key locally to connect.
-- You can import your existing public key if you prefer.
+- deployed a cluster. Incredibly unstable. SSH shenanigans in order to connect kubectl. 
+See if more stable from scratch and try to deploy a test load.
