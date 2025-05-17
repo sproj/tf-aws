@@ -20,3 +20,9 @@ output "scp_kube_config_file" {
   description = "Copy kube config file from master node to local AFTER cluster setup complete"
   value = "scp -i ~/.ssh/dev-k8s-key ubuntu@${module.kubernetes_ec2.master_public_ip}:/home/ubuntu/.kube/config ~/.kube/config"
 }
+
+# harcoded ssh key name - should be a var
+output "check_initialization_command" {
+  description = "Command to check the initialization status of the cluster"
+  value       = "./check-k8s-init.sh ${module.kubernetes_ec2.master_public_ip} ~/.ssh/dev-k8s-key"
+}
