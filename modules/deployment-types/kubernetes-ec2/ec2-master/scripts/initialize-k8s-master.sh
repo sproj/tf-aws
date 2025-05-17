@@ -137,10 +137,27 @@ end_section "Configuring kubectl"
 
 # Install network plugin (Flannel)
 start_section "Network Plugin Installation"
-log_step "Applying Flannel network plugin"
 export KUBECONFIG=/etc/kubernetes/admin.conf
-kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
 
+# Try to use the latest version from GitHub first
+log_step "Attempting to apply latest Flannel manifest from GitHub..."
+if kubectl apply -f "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"; then
+  log_step "Successfully applied latest Flannel manifest from GitHub"
+else
+  # Fall back to the local copy
+  log_step "Failed to apply manifest from GitHub, falling back to local copy (v$CNI_VERSION)"
+  
+  # Create a directory for the manifest
+  mkdir -p /opt/kubernetes/manifests
+  
+  # Create the local manifest file using the provided content
+  cat > /opt/kubernetes/manifests/kube-flannel.yml << EOF
+${flannel_manifest}
+EOF
+  
+  # Apply the local manifest
+  kubectl apply -f /opt/kubernetes/manifests/kube-flannel.yml
+fi
 # Allow scheduling on control plane node (for single-node clusters)
 log_step "Allowing pods on control-plane node"
 kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true

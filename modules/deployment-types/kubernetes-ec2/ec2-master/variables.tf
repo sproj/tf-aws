@@ -34,7 +34,7 @@ variable "kubernetes_version" {
 variable "cni_version" {
   description = "CNI version to install"
   type        = string
-  default     = "1.3.0" # Current stable version
+  default     = "0.26.7" # Current stable version
 }
 
 variable "ami_id" {

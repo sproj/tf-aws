@@ -12,6 +12,7 @@ resource "aws_instance" "master" {
     kubernetes_version = var.kubernetes_version
     cni_version        = var.cni_version
     private_ip         = "$(hostname -I | awk '{print $1}')" # This will be evaluated on the instance
+    flannel_manifest   = file("${path.module}/files/kube-flannel-${var.cni_version}.yml")
   }))
 
   tags = merge(var.tags, { Name = "${var.name_prefix}-master" })
