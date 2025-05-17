@@ -21,11 +21,12 @@ module "networking" {
 }
 
 module "security_groups" {
-  source         = "./security-groups"
-  vpc_id         = module.networking.vpc_id
-  vpc_cidr_block = var.vpc_cidr_block
-  name_prefix    = var.name_prefix
-  tags           = var.tags
+  source           = "./security-groups"
+  vpc_id           = module.networking.vpc_id
+  vpc_cidr_block   = var.vpc_cidr_block
+  allowed_ssh_cidr = var.allowed_ssh_cidr
+  name_prefix      = var.name_prefix
+  tags             = var.tags
 }
 
 module "iam_instance_profile" {
