@@ -41,7 +41,7 @@ resource "aws_instance" "master" {
   
     # Initialize Kubernetes with explicit success check
     PRIVATE_IP=$(hostname -I | awk '{print $1}')
-    kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=$(PRIVATE_IP)
+    kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-cert-extra-sans=$PRIVATE_IP
   
     # Check if kubeadm init was successful
     if [ -f /etc/kubernetes/admin.conf ]; then
@@ -50,7 +50,7 @@ resource "aws_instance" "master" {
       chown ubuntu:ubuntu /home/ubuntu/.kube/config
 
       # Add tls-server-name to kubeconfig
-      sudo -u ubuntu kubectl config set-cluster kubernetes --kubeconfig=/home/ubuntu/.kube/config --tls-server-name=$(PRIVATE_IP)
+      sudo -u ubuntu kubectl config set-cluster kubernetes --kubeconfig=/home/ubuntu/.kube/config --tls-server-name=$PRIVATE_IP
     
       # Wait for API server to be fully ready
       echo "Waiting for API server to be ready..."
