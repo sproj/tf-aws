@@ -21,8 +21,8 @@ module "kubernetes_ec2" {
   vpc_cidr_block            = "10.10.0.0/16"
   public_subnet_cidr_blocks = ["10.10.1.0/24"]
   availability_zones        = ["eu-west-1a"]
-  name_prefix               = "dev-k8s"
-  key_name                  = "dev-k8s-key"
+  name_prefix               = var.name_prefix
+  key_name                  = "${var.name_prefix}-key"
   node_ami_id               = "ami-09079da11cd2861fa" # ubuntu 22.04 LTS (eu-west-1) - check https://cloud-images.ubuntu.com/locator/ec2/
   master_ami_id             = "ami-09079da11cd2861fa"
   allowed_ssh_cidr          = "${var.allowed_ssh_cidr}/32"
