@@ -13,6 +13,30 @@ variable "iam_instance_profile" {
   type        = string
 }
 
+variable "pod_network_cidr" {
+  description = "CIDR range for pod network"
+  type        = string
+  default     = "10.244.0.0/16" # Default for Flannel
+}
+
+variable "service_cidr" {
+  description = "CIDR range for services"
+  type        = string
+  default     = "10.96.0.0/12" # Kubernetes default
+}
+
+variable "kubernetes_version" {
+  description = "Kubernetes version to install"
+  type        = string
+  default     = "1.33" # Current stable version
+}
+
+variable "cni_version" {
+  description = "CNI version to install"
+  type        = string
+  default     = "1.3.0" # Current stable version
+}
+
 variable "ami_id" {
   description = "AMI ID for the master node"
   type        = string
