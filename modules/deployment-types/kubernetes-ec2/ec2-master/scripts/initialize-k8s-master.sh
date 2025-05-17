@@ -119,8 +119,6 @@ cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
 
 log_step "Adding tls-server-name to kubeconfig"
 
-log_step "Adding tls-server-name to kubeconfig"
-
 # Get the private IP
 PRIVATE_IP=$(hostname -I | awk '{print $1}')
 
