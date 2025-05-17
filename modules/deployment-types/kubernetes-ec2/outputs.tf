@@ -37,3 +37,8 @@ output "master_public_ip" {
   description = "Public IP address of the Kubernetes master node"
   value       = module.ec2_master.public_ip
 }
+
+output "master_private_ip" {
+  description = "Private IP address of the Kubernetes master node"
+  value = module.ec2_master.master_private_ip
+}
