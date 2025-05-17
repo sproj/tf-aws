@@ -25,6 +25,7 @@ module "kubernetes_ec2" {
   key_name                  = "dev-k8s-key"
   node_ami_id               = "ami-09079da11cd2861fa" # ubuntu 22.04 LTS (eu-west-1) - check https://cloud-images.ubuntu.com/locator/ec2/
   master_ami_id             = "ami-09079da11cd2861fa"
+  allowed_ssh_cidr          = var.allowed_ssh_cidr
   tags = {
     Environment    = "dev"
     DeploymentType = "kubernetes-ec2"
