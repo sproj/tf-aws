@@ -8,7 +8,7 @@ resource "aws_security_group" "nodes" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.allowed_ssh_cidr}"]
+    cidr_blocks = [var.allowed_ssh_cidr]
   }
 
   # Allow all traffic from within the VPC
@@ -41,7 +41,7 @@ resource "aws_security_group" "master" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${var.allowed_ssh_cidr}"]
+    cidr_blocks = [var.allowed_ssh_cidr]
   }
 
   # Kubernetes API - since using SSH tunneling, 
