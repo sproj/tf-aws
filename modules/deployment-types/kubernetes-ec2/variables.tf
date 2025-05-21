@@ -8,6 +8,7 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
 ## networking + SG
 variable "name_prefix" {
   description = "Prefix for resource naming"
