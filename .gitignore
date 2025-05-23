@@ -106,5 +106,3 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# local scripts
-start-k8s-tunnel.sh
