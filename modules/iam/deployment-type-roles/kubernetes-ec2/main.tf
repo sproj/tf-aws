@@ -9,24 +9,24 @@ data "terraform_remote_state" "state_backend" {
 }
 
 module "networking" {
-  source = "../../../infrastructure/networking"
+  source = "../../../permissions/networking"
 }
 module "ec2" {
-  source = "../../../infrastructure/ec2"
+  source = "../../../permissions/ec2"
 }
 module "elasticloadbalancing" {
-  source = "../../../infrastructure/elasticloadbalancing"
+  source = "../../../permissions/elasticloadbalancing"
 }
 module "autoscaling" {
-  source = "../../../infrastructure/autoscaling"
+  source = "../../../permissions/autoscaling"
 }
 
 module "iam" {
-  source = "../../../infrastructure/iam"
+  source = "../../../permissions/iam"
 }
 
 module "ecr" {
-  source = "../../../infrastructure/ecr"
+  source = "../../../permissions/ecr"
 }
 
 locals {
