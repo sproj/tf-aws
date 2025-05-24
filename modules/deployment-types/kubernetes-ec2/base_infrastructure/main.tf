@@ -1,5 +1,5 @@
 module "networking" {
-  source                    = "./networking"
+  source                    = "../../../infrastructure/networking"
   vpc_cidr_block            = var.vpc_cidr_block
   public_subnet_cidr_blocks = var.public_subnet_cidr_blocks
   availability_zones        = var.availability_zones
