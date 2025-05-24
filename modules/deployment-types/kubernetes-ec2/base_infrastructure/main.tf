@@ -17,7 +17,9 @@ module "security_groups" {
 }
 
 module "iam_instance_profile" {
-  source      = "./iam-instance-profile"
-  name_prefix = var.name_prefix
-  tags        = var.tags
+  source              = "../../../infrastructure/iam-instance-profile"
+  name_prefix         = var.name_prefix
+  tags                = var.tags
+  service_name        = "ec2-nodes"
+  service_identifiers = ["ec2.amazonaws.com"]
 }
