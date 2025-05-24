@@ -27,7 +27,7 @@ module "base_infrastructure" {
 module "control_plane" {
   source                    = "./control_plane"
   public_subnet_ids         = module.base_infrastructure.public_subnet_ids
-  security_group_ids        = module.base_infrastructure.master_security_group_ids
+  security_group_ids        = [module.base_infrastructure.master_security_group_id]
   iam_instance_profile_name = module.base_infrastructure.instance_profile_name
   ami_id                    = var.node_ami_id
   instance_type             = var.node_instance_type
@@ -42,7 +42,7 @@ module "control_plane" {
 module "worker_nodes" {
   source                    = "./worker_nodes"
   public_subnet_ids         = module.base_infrastructure.public_subnet_ids
-  security_group_ids        = module.base_infrastructure.node_security_group_ids
+  security_group_ids        = [module.base_infrastructure.node_security_group_id]
   iam_instance_profile_name = module.base_infrastructure.instance_profile_name
   ami_id                    = var.node_ami_id
   instance_type             = var.node_instance_type
