@@ -15,7 +15,7 @@ module "master_instance" {
   instance_type        = var.instance_type
   subnet_id            = var.public_subnet_ids[0]
   security_group_ids   = var.security_group_ids
-  iam_instance_profile = var.iam_instance_profile
+  iam_instance_profile = var.iam_instance_profile_name
   key_name             = var.key_name
   name                 = "${var.name_prefix}-master"
   tags                 = var.tags

@@ -10,12 +10,12 @@ output "public_subnet_ids" {
 
 output "node_security_group_ids" {
   description = "Security group IDs for Kubernetes worker nodes"
-  value       = module.security_groups.node_sg_ids
+  value       = [module.worker_nodes_sg.security_group_id]
 }
 
 output "master_security_group_ids" {
   description = "Security group IDs for Kubernetes master node"
-  value       = module.security_groups.master_sg_ids
+  value       = [module.master_sg.security_group_id]
 }
 
 output "instance_profile_name" {

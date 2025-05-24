@@ -14,11 +14,6 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
-variable "iam_instance_profile" {
-  description = "IAM instance profile name for the instance"
-  type        = string
-}
-
 variable "iam_instance_profile_name" {
   description = "IAM instance profile name for EC2 nodes"
   type        = string

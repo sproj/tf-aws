@@ -15,7 +15,7 @@ module "iam_instance_profile" {
   service_identifiers = ["ec2.amazonaws.com"]
 }
 
-module "nodes_sg" {
+module "worker_nodes_sg" {
   source = "../../../infrastructure/security-groups"
 
   name        = "${var.name_prefix}-nodes"
@@ -83,6 +83,7 @@ module "master_sg" {
     },
     {
       from_port   = 0,
+      protocol    = "udp"
       to_port     = 65535,
       cidr_blocks = [var.vpc_cidr_block],
       description = "Node/master UDP communication (flannel)"
