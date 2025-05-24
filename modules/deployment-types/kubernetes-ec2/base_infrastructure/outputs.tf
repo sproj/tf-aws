@@ -9,7 +9,7 @@ output "public_subnet_ids" {
 }
 
 output "node_security_group_id" {
-  description = "Security group IDs for Kubernetes worker nodes"
+  description = "Security group ID for Kubernetes worker nodes"
   value       = module.worker_nodes_sg.security_group_id
 }
 
