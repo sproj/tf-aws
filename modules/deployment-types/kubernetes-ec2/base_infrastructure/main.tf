@@ -82,10 +82,10 @@ module "master_sg" {
       description = "Node/master communication"
     },
     {
-      from_port   = 0,
+      from_port   = 0
       protocol    = "udp"
-      to_port     = 65535,
-      cidr_blocks = [var.vpc_cidr_block],
+      to_port     = 65535
+      cidr_blocks = [var.vpc_cidr_block]
       description = "Node/master UDP communication (flannel)"
     }
   ]
