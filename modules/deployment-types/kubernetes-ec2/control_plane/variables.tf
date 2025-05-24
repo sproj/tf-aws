@@ -10,8 +10,13 @@ variable "name_prefix" {
 }
 
 variable "security_group_ids" {
-  description = "Security group IDs for Kubernetes master node"
+  description = "List of security group IDs for the instance"
   type        = list(string)
+}
+
+variable "iam_instance_profile" {
+  description = "IAM instance profile name for the instance"
+  type        = string
 }
 
 variable "iam_instance_profile_name" {
@@ -57,4 +62,29 @@ variable "instance_type" {
 variable "key_name" {
   description = "SSH key name for EC2 access"
   type        = string
+}
+
+## k8s master node specific
+variable "pod_network_cidr" {
+  description = "CIDR range for pod network"
+  type        = string
+  default     = "10.244.0.0/16" # Default for Flannel
+}
+
+variable "service_cidr" {
+  description = "CIDR range for services"
+  type        = string
+  default     = "10.96.0.0/12" # Kubernetes default
+}
+
+variable "kubernetes_version" {
+  description = "Kubernetes version to install"
+  type        = string
+  default     = "1.33" # Current stable version
+}
+
+variable "cni_version" {
+  description = "CNI version to install"
+  type        = string
+  default     = "0.26.7" # Current stable version
 }
