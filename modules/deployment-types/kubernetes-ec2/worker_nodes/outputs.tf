@@ -1,3 +1,7 @@
-output "asg_name" {
-  value = module.ec2_nodes.aws_autoscaling_group.nodes.name
+output "worker_asg_name" {
+  value = module.worker_nodes.asg_name
+}
+
+output "worker_asg_arn" {
+  value = module.worker_nodes.asg_arn
 }
