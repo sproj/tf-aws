@@ -5,7 +5,7 @@ output "master_public_ip" {
 
 output "ssh_command" {
   description = "SSH command to connect to the master node"
-  value       = "ssh -i ~/.ssh/${var.name_prefix}-key ubuntu@${module.control_plane.master_private_ip}"
+  value       = "ssh -i ~/.ssh/${var.name_prefix}-key ubuntu@${module.control_plane.public_ip}"
 }
 
 output "start_k8s_tunnel_command" {

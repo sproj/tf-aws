@@ -22,8 +22,8 @@ module "kubernetes_ec2" {
   public_subnet_cidr_blocks = ["10.10.1.0/24"]
   availability_zones        = ["eu-west-1a"]
   key_name                  = "${var.name_prefix}-key"
-  node_ami_id               = "ami-09079da11cd2861fa" # ubuntu 22.04 LTS (eu-west-1) - check https://cloud-images.ubuntu.com/locator/ec2/
-  master_ami_id             = "ami-09079da11cd2861fa"
+  node_ami_id               = var.ami_id # ubuntu 22.04 LTS (eu-west-1) - check https://cloud-images.ubuntu.com/locator/ec2/
+  master_ami_id             = var.ami_id
   allowed_ssh_cidr          = "${var.allowed_ssh_cidr}/32"
   name_prefix               = var.name_prefix
   tags = {
