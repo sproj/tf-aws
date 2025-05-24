@@ -7,5 +7,5 @@ variable "allowed_ssh_cidr" {
 # Should be defined in a .auto.tfvars (gitignored)
 variable "name_prefix" {
   description = "Prefix for this env for things like ssh key names"
-  type = string
+  type        = string
 }
