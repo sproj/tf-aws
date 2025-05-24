@@ -38,8 +38,8 @@ variable "max_size" {
   type        = number
 }
 
-variable "name_prefix" {
-  description = "Prefix for resource names"
+variable "name" {
+  description = "Name the autoscaling group"
   type        = string
 }
 

@@ -1,5 +1,5 @@
 module "ec2_nodes" {
-  source               = "./ec2-nodes"
+  source               = "../../../infrastructure/autoscaling-group"
   subnet_ids           = var.public_subnet_ids
   security_group_ids   = var.security_groups.node_sg_ids
   iam_instance_profile = var.iam_instance_profile.profile_name
@@ -8,6 +8,6 @@ module "ec2_nodes" {
   desired_capacity     = var.desired_capacity
   min_size             = var.min_size
   max_size             = var.max_size
-  name_prefix          = var.name_prefix
+  name                 = "${var.name_prefix}-nodes"
   tags                 = var.tags
 }

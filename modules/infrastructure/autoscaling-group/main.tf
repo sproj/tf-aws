@@ -1,5 +1,5 @@
 resource "aws_launch_template" "nodes" {
-  name_prefix   = "${var.name_prefix}-nodes-"
+  name_prefix   = "${var.name}-launch-template"
   image_id      = var.ami_id
   instance_type = var.instance_type
 
@@ -11,23 +11,23 @@ resource "aws_launch_template" "nodes" {
 
   tag_specifications {
     resource_type = "instance"
-    tags         = merge(var.tags, { Name = "${var.name_prefix}-node" })
+    tags          = merge(var.tags, { Name = "${var.name}-launch-template" })
   }
 }
 
 resource "aws_autoscaling_group" "nodes" {
-  name_prefix          = "${var.name_prefix}-nodes-"
-  min_size             = var.min_size
-  max_size             = var.max_size
-  desired_capacity     = var.desired_capacity
-  vpc_zone_identifier  = var.subnet_ids
+  name_prefix         = "${var.name}-asg"
+  min_size            = var.min_size
+  max_size            = var.max_size
+  desired_capacity    = var.desired_capacity
+  vpc_zone_identifier = var.subnet_ids
   launch_template {
     id      = aws_launch_template.nodes.id
     version = "$Latest"
   }
   tag {
     key                 = "Name"
-    value               = "${var.name_prefix}-node"
+    value               = "${var.name}-asg"
     propagate_at_launch = true
   }
   dynamic "tag" {
