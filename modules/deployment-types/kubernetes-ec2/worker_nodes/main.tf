@@ -1,5 +1,5 @@
 locals {
-  worker_user_data = templatefile("${path.module}/scripts/initialize-k8s-worker.sh", {
+  worker_user_data = templatefile("${path.module}/scripts/worker-runtime.sh", {
     cluster_name = var.name_prefix
   })
 }

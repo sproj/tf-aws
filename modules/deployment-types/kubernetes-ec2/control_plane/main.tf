@@ -1,11 +1,8 @@
 locals {
-  k8s_user_data = templatefile("${path.module}/scripts/initialize-k8s-master.sh", {
+  k8s_user_data = templatefile("${path.module}/scripts/master-runtime.sh", {
     cluster_name = var.name_prefix
     pod_network_cidr   = var.pod_network_cidr
     service_cidr       = var.service_cidr
-    kubernetes_version = var.kubernetes_version
-    cni_version        = var.cni_version
-    private_ip         = "$(hostname -I | awk '{print $1}')"
     flannel_manifest   = file("${path.module}/files/kube-flannel-${var.cni_version}.yml")
   })
 }
