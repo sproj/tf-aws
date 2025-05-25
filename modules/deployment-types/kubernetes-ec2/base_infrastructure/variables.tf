@@ -3,6 +3,12 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "env" {
+  description = "Short form environment name (dev, prod...)"
+  type        = string
+}
+
 ## networking + SG
 variable "name_prefix" {
   description = "Prefix for resource naming"

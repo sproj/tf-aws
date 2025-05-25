@@ -11,11 +11,11 @@ MASTER_IP="$1"
 SSH_KEY="$2"
 
 echo "Checking Kubernetes initialization status on $MASTER_IP..."
-ssh -i "$SSH_KEY" ubuntu@$MASTER_IP "sudo tail -n 50 /var/log/k8s-master-init.log"
+ssh -i "$SSH_KEY" ubuntu@$MASTER_IP "sudo tail -n 50 /var/log/k8s-master-runtime.log"
 
 echo ""
 echo "Checking if initialization is complete..."
-ssh -i "$SSH_KEY" ubuntu@$MASTER_IP "if [ -f /var/log/k8s-master-init.done ]; then echo 'Initialization complete!'; else echo 'Initialization still in progress...'; fi"
+ssh -i "$SSH_KEY" ubuntu@$MASTER_IP "if [ -f /var/log/k8s-master-runtime-complete ]; then echo 'Initialization complete!'; else echo 'Initialization still in progress...'; fi"
 
 echo ""
 echo "Current pod status:"
