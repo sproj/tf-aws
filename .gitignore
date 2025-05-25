@@ -106,3 +106,5 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# pkrvars files
+*.pkrvars.hcl
