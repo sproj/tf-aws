@@ -22,6 +22,7 @@ module "base_infrastructure" {
   availability_zones        = ["eu-west-1a"]
   allowed_ssh_cidr          = "${var.allowed_ssh_cidr}/32"
   name_prefix               = var.name_prefix
+  env                       = var.env
   tags = {
     Environment    = "dev"
     DeploymentType = "kubernetes-ec2"
