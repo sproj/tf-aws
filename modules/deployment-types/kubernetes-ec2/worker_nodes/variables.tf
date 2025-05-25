@@ -34,7 +34,7 @@ variable "ami_id" {
 variable "instance_type" {
   description = "EC2 instance type for the worker nodes"
   type        = string
-  default     = "t3.small"
+  default     = "t3.micro"
 }
 
 variable "desired_capacity" {
@@ -52,5 +52,5 @@ variable "min_size" {
 variable "max_size" {
   description = "Maximum number of worker nodes"
   type        = number
-  default     = 1
+  default     = 2
 }
