@@ -1,20 +1,52 @@
 locals {
   iam_permissions = {
     creator = [
-      "iam:PassRole",
+      // Role management
       "iam:CreateRole",
-      "iam:TagRole",
-      "iam:GetRole",
       "iam:DeleteRole",
-      "iam:ListRolePolicies",
+      "iam:GetRole",
+      "iam:UpdateRole",
+      "iam:TagRole",
+      "iam:UntagRole",
+      "iam:ListRoles",
+      "iam:PassRole",
+
+      // Policy management  
+      "iam:CreatePolicy",
+      "iam:DeletePolicy",
+      "iam:GetPolicy",
+      "iam:TagPolicy",
+      "iam:UntagPolicy",
+      "iam:ListPolicies",
+
+      // Policy version management
+      "iam:CreatePolicyVersion",
+      "iam:DeletePolicyVersion",
+      "iam:GetPolicyVersion",
+      "iam:ListPolicyVersions",
+      "iam:SetDefaultPolicyVersion",
+
+      // Policy attachment 
+      "iam:AttachRolePolicy",
+      "iam:DetachRolePolicy",
       "iam:ListAttachedRolePolicies",
-      "iam:ListInstanceProfilesForRole",
+      "iam:ListRolePolicies",
+
+      // Inline policies
+      "iam:PutRolePolicy",
+      "iam:DeleteRolePolicy",
+      "iam:GetRolePolicy",
+
+      // Instance profiles
       "iam:CreateInstanceProfile",
-      "iam:TagInstanceProfile",
-      "iam:GetInstanceProfile",
       "iam:DeleteInstanceProfile",
+      "iam:GetInstanceProfile",
+      "iam:TagInstanceProfile",
+      "iam:UntagInstanceProfile",
       "iam:AddRoleToInstanceProfile",
-      "iam:RemoveRoleFromInstanceProfile"
+      "iam:RemoveRoleFromInstanceProfile",
+      "iam:ListInstanceProfiles",
+      "iam:ListInstanceProfilesForRole"
     ]
     manager = [
       "iam:PassRole",

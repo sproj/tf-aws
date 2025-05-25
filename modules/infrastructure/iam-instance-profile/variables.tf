@@ -18,3 +18,8 @@ variable "service_identifiers" {
   description = "List of service identifiers that can assume this role"
   type        = list(string)
 }
+
+variable "env" {
+  description = "Environment short name (dev, prod..)"
+  type        = string
+}

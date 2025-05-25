@@ -2,6 +2,7 @@ resource "aws_launch_template" "nodes" {
   name_prefix   = "${var.name}-launch-template"
   image_id      = var.ami_id
   instance_type = var.instance_type
+  user_data     = var.user_data
 
   iam_instance_profile {
     name = var.iam_instance_profile

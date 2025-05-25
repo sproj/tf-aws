@@ -1,3 +1,9 @@
+locals {
+  worker_user_data = templatefile("${path.module}/scripts/initialize-k8s-worker.sh", {
+    cluster_name = var.name_prefix
+  })
+}
+
 module "worker_nodes" {
   source               = "../../../infrastructure/autoscaling-group"
   subnet_ids           = var.public_subnet_ids
@@ -9,5 +15,6 @@ module "worker_nodes" {
   min_size             = var.min_size
   max_size             = var.max_size
   name                 = "${var.name_prefix}-nodes"
+  user_data            = base64encode(local.worker_user_data)
   tags                 = var.tags
 }

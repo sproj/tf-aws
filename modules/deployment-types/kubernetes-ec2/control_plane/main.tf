@@ -1,5 +1,6 @@
 locals {
   k8s_user_data = templatefile("${path.module}/scripts/initialize-k8s-master.sh", {
+    cluster_name = var.name_prefix
     pod_network_cidr   = var.pod_network_cidr
     service_cidr       = var.service_cidr
     kubernetes_version = var.kubernetes_version
