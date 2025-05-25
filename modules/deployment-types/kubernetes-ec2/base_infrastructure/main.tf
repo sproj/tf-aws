@@ -13,6 +13,7 @@ module "iam_instance_profile" {
   tags                = var.tags
   service_name        = "ec2-nodes"
   service_identifiers = ["ec2.amazonaws.com"]
+  env                 = "dev"
 }
 
 module "worker_nodes_sg" {
