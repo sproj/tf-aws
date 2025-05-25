@@ -48,3 +48,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "user_data" {
+  description = "base64encoded string of a script to run (if any) as cloud-init"
+  type        = string
+  default     = ""
+}

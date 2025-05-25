@@ -196,5 +196,40 @@ echo "Kubernetes master initialization completed at $(date)"
 echo "Check $LOG_FILE for detailed logs"
 echo "========================================================================"
 
+echo "========================================================================"
+echo "Storing cluster join information for workers..."
+
+# Generate join command components
+BOOTSTRAP_TOKEN=$(kubeadm token create --ttl 24h0m0s)
+CA_CERT_HASH=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
+               openssl rsa -pubin -outform der 2>/dev/null | \
+               openssl dgst -sha256 -hex | sed 's/^.* //')
+MASTER_ENDPOINT="${private_ip}:6443"
+
+# Create join info JSON
+cat > /tmp/cluster-join-info.json << EOF
+{
+  "token": "$BOOTSTRAP_TOKEN",
+  "ca_cert_hash": "sha256:$CA_CERT_HASH", 
+  "master_endpoint": "$MASTER_ENDPOINT",
+  "generated_at": "$(date -Iseconds)",
+  "expires_at": "$(date -d '+24 hours' -Iseconds)"
+}
+EOF
+
+# Upload to S3
+aws s3 cp /tmp/cluster-join-info.json \
+  s3://tfaws-dev-secrets/clusters/${cluster_name}/join-info.json \
+  --server-side-encryption AES256
+
+if [ $? -eq 0 ]; then
+    echo "Join information stored successfully"
+else
+    echo "WARNING: Failed to store join information to S3"
+fi
+
+rm /tmp/cluster-join-info.json
+echo "========================================================================"
+
 # Write a "done" marker file that can be checked to verify completion
 echo "$(date)" > /var/log/k8s-master-init.done
