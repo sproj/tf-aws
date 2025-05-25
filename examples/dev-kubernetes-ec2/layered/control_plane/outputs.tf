@@ -3,6 +3,11 @@ output "master_public_ip" {
   value       = module.control_plane.public_ip
 }
 
+output "master_private_ip" {
+  description = "Private IP address of the Kubernetes master node."
+  value       = module.control_plane.master_private_ip
+}
+
 output "ssh_command" {
   description = "SSH command to connect to the master node"
   value       = "ssh -i ~/.ssh/${var.name_prefix}-key ubuntu@${module.control_plane.public_ip}"

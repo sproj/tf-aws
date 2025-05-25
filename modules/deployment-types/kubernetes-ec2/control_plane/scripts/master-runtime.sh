@@ -67,9 +67,11 @@ cat > /tmp/cluster-join-info.json << EOF
 EOF
 
 # Upload to S3
-aws s3 cp /tmp/cluster-join-info.json \
-  s3://tfaws-dev-secrets/clusters/$CLUSTER_NAME/join-info.json \
-  --server-side-encryption AES256
+aws s3api put-object \
+  --bucket tfaws-dev-secrets \
+  --key "clusters/$CLUSTER_NAME/join-info.json" \
+  --body /tmp/cluster-join-info.json \
+  --server-side-encryption "AES256"
 
 if [ $? -eq 0 ]; then
     echo "Join information stored successfully"
