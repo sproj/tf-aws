@@ -46,6 +46,9 @@ sed -i "/server: https/a\\    tls-server-name: $PRIVATE_IP" /home/ubuntu/.kube/c
 export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl apply -f "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"
 
+# Install aws-ebs-csi-driver so that nodes can run StorageClass with persistent volume claims
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.38" 
+
 # Allow scheduling on control plane (for single-node testing)
 kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
 

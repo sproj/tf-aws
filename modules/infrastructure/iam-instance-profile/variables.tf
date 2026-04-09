@@ -23,3 +23,9 @@ variable "env" {
   description = "Environment short name (dev, prod..)"
   type        = string
 }
+
+variable "additional_policy_arns" {
+  description = "List of additional IAM policy ARNs to attach to the instance role"
+  type        = list(string)
+  default     = []
+}
