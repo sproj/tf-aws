@@ -1,17 +1,18 @@
 #!/bin/bash
 # Safe kubeconfig merge script - takes cluster name as parameter
-# Usage: ./merge_kubeconfig.sh <cluster_name> <master_public_ip>
+# Usage: ./merge_kubeconfig.sh <cluster_name> <master_public_ip> <master_private_ip>
 
 set -e  # Exit on any error
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <cluster_name> <master_public_ip>"
-    echo "Example: $0 dev-k8s 54.195.174.192"
+if [ "$#" -ne 3 ]; then
+    echo "Usage: $0 <cluster_name> <master_public_ip> <master_private_ip>"
+    echo "Example: $0 dev-k8s 54.195.174.192 10.10.1.16"
     exit 1
 fi
 
 CLUSTER_NAME="$1"
 MASTER_IP="$2"
+MASTER_PRIVATE_IP="$3"
 TEMP_CONFIG="$HOME/.kube/${CLUSTER_NAME}_temp_config"
 BACKUP_CONFIG="$HOME/.kube/config.backup.$(date +%Y%m%d_%H%M%S)"
 
@@ -34,14 +35,17 @@ echo "Step 5: Merge the new config"
 export KUBECONFIG=${TEMP_CONFIG}:$HOME/.kube/config
 kubectl config view --flatten > $HOME/.kube/config.new
 
-echo "Step 6: Replace config atomically"
+echo "step 6: Set tls-server-name to cluster private IP and server to localhost:6443"
+kubectl config set-cluster kubernetes --tls-server-name=$(MASTER_PRIVATE_IP) --server=https://127.0.0.1:6443
+
+echo "Step 7: Replace config atomically"
 mv $HOME/.kube/config.new $HOME/.kube/config
 
-echo "Step 7: Cleanup temporary files"
+echo "Step 8: Cleanup temporary files"
 rm ${TEMP_CONFIG}
 unset KUBECONFIG
 
-echo "Step 8: Verify the merge worked"
+echo "Step 9: Verify the merge worked"
 echo "Available contexts:"
 kubectl config get-contexts
 

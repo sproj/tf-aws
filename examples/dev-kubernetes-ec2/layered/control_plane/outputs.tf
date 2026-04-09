@@ -25,5 +25,5 @@ output "check_initialization_command" {
 
 output "merge_kubeconfig_command" {
   description = "Command to merge kubeconfig from the deployed cluster"
-  value       = "./merge_kubeconfig.sh ${var.name_prefix} ${module.control_plane.public_ip}"
+  value       = "./merge_kubeconfig.sh ${var.name_prefix} ${module.control_plane.public_ip} ${module.control_plane.master_private_ip}"
 }
