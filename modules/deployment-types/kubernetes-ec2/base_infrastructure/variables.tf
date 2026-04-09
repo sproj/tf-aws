@@ -36,3 +36,9 @@ variable "allowed_ssh_cidr" {
   type        = string
   # default     = "0.0.0.0/0"
 }
+
+variable "additional_instance_policy_arns" {
+  description = "Additional IAM policy ARNs to attach to the EC2 node instance role"
+  type        = list(string)
+  default     = []
+}

@@ -8,12 +8,13 @@ module "networking" {
 }
 
 module "iam_instance_profile" {
-  source              = "../../../infrastructure/iam-instance-profile"
-  name_prefix         = var.name_prefix
-  tags                = var.tags
-  service_name        = "ec2-nodes"
-  service_identifiers = ["ec2.amazonaws.com"]
-  env                 = var.env
+  source                 = "../../../infrastructure/iam-instance-profile"
+  name_prefix            = var.name_prefix
+  tags                   = var.tags
+  service_name           = "ec2-nodes"
+  service_identifiers    = ["ec2.amazonaws.com"]
+  env                    = var.env
+  additional_policy_arns = var.additional_instance_policy_arns
 }
 
 module "worker_nodes_sg" {
