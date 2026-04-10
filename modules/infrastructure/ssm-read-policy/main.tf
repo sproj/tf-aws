@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "ssm_read" {
       "ssm:GetParametersByPath",
       "ssm:DescribeParameters",
     ]
-    resources = ["*"]
+    resources = ["arn:aws:ssm:eu-west-1:${data.aws_caller_identity.current.account_id}:parameter/dev/dev-k8s/*"]
   }
 }
 
