@@ -1,52 +1,44 @@
-phase 0:
+# Cluster Operations
 
-next you need to set up the infrastructure modules.
+## Standing up the cluster
 
-think about whether the intra module for each deployment type should be a sub-module of the deployment type, or whether the deployment should inherit 
-from broader infra definitions or what - learn about that.
+### Prerequisites (one-time)
+- AWS profiles configured: `super-user`, `infrastructure-manager`, `kubernetes-ec2-creator`
+- Packer AMI built and `ami_id` set in control_plane and worker_nodes tfvars
+- Parameter Store secrets populated manually under `/dev/dev-k8s/<application>/<secret-name>`
+  (these are long-lived and only need updating if credentials rotate)
 
-phase 1:
+### Terraform layers (apply in order)
+Each layer is applied from its directory under `examples/dev-kubernetes-ec2/layered/`.
 
-✅ I've captured where you’re leaving off:
+```
+cd base_infrastructure/ && terraform apply
+cd control_plane/       && terraform apply
+cd worker_nodes/        && terraform apply
+```
 
-    Next steps for you:
+### Post-apply: apply manifests to the cluster
+Once the cluster is reachable (via SSH tunnel to master private IP):
 
-        Sketch a real terraform sequence (init → plan → apply)
+```
+kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/storageclass.yaml
+kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/block-imds.yaml
+kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/cluster-secret-store.yaml
+```
 
-        Set up a remote backend (S3 + DynamoDB locking)
+## Tearing down the cluster
 
-        Start on a real deployment module, wiring together resource roles
+Destroy in reverse order:
 
-✅ Context:
+```
+cd worker_nodes/        && terraform destroy
+cd control_plane/       && terraform destroy
+cd base_infrastructure/ && terraform destroy
+```
 
-    You have a working module structure for roles.
+Note: Parameter Store secrets are not managed by Terraform and will persist after destroy.
 
-    You're clear on how to scale to multi-repo architecture later.
-
-    Naming and trust policies are aligned with best practices.
-
-phase 2:
-
-- Bootstrap and meta-roles completed (infrastructure-manager)
-- Deployment-type IAM roles completed (kubernetes-ec2 creator/manager/reader)
-- Local AWS CLI profiles configured
-- Dynamic tagging (ManagedBy) implemented
-- Full Terraform lifecycle (apply/destroy) verified
-- Operational model (assume-role separation) working
-- Ready to build first real environment (e.g., dev-k8s-ec2)
-
-
-Tagging on the networking module needs some attention - same on the deployment it feeds. ManagedBy enough??
-Might want to split out roles per infra type after all. Kubernetes-ec2 should be a networking, ec2, ecr.....actors putting together an env and then plopping k8s into it.
-
-moving permissions to infrastructure modules, link back to deployment-type module
-- deployment-type -> create one policy for each role (creator, manager...) which has the permissions for all the infra that 
-deployment will deal with
-- add boundaries
-- add conditions
-- add explicial denials
-- remove current permissions policies - AWS has a limit of 10 policies per role
-
-Left off:
-- deployed a cluster. Incredibly unstable. SSH shenanigans in order to connect kubectl. 
-See if more stable from scratch and try to deploy a test load.
+## Known manual steps / limitations
+- Cluster is only reachable via SSH tunnel (no public ingress yet)
+- Region is hardcoded to eu-west-1 throughout
+- SSM policy scoped to `/dev/dev-k8s/*` — update if path convention changes
