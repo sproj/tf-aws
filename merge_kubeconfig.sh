@@ -36,7 +36,7 @@ export KUBECONFIG=${TEMP_CONFIG}:$HOME/.kube/config
 kubectl config view --flatten > $HOME/.kube/config.new
 
 echo "step 6: Set tls-server-name to cluster private IP and server to localhost:6443"
-kubectl config set-cluster kubernetes --tls-server-name=$(MASTER_PRIVATE_IP) --server=https://127.0.0.1:6443
+kubectl config set-cluster kubernetes --tls-server-name=$MASTER_PRIVATE_IP --server=https://127.0.0.1:6443
 
 echo "Step 7: Replace config atomically"
 mv $HOME/.kube/config.new $HOME/.kube/config
