@@ -47,7 +47,7 @@ resource "aws_iam_role" "infrastructure_manager" {
 
 resource "aws_iam_policy" "infrastructure_manager_policy" {
   name        = "infrastructure-manager-policy"
-  description = "Allows creation and management of IAM roles and policies for infrastructure deployments."
+  description = "Allows creation and management of IAM roles and policies for infrastructure deployments. Also a route53 hosted zone."
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -77,8 +77,14 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "iam:ListInstanceProfilesForRole",
           "iam:CreatePolicyVersion",
           "iam:SetDefaultPolicyVersion",
-          "iam:DeletePolicyVersion"
-
+          "iam:DeletePolicyVersion",
+          "route53:CreateHostedZone",
+          "route53:DeleteHostedZone",
+          "route53:GetHostedZone",
+          "route53:ListHostedZones",
+          "route53:ChangeTagsForResource",
+          "route53:ListTagsForResource",
+          "route53:GetChange"
         ],
         Resource = ["*"]
       }
