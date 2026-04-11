@@ -29,6 +29,14 @@ module "ecr" {
   source = "../../../permissions/ecr"
 }
 
+module "route53" {
+  source = "../../../permissions/route53"
+}
+
+module "ssm" {
+  source = "../../../permissions/ssm"
+}
+
 locals {
   creator_permissions = concat(
     module.networking.creator_permissions,
@@ -36,7 +44,9 @@ locals {
     module.elasticloadbalancing.creator_permissions,
     module.autoscaling.creator_permissions,
     module.iam.creator_permissions,
-    module.ecr.creator_permissions
+    module.ecr.creator_permissions,
+    module.route53.creator_permissions,
+    module.ssm.creator_permissions
     # add more as needed
   )
 
@@ -46,7 +56,9 @@ locals {
     module.elasticloadbalancing.manager_permissions,
     module.autoscaling.manager_permissions,
     module.iam.manager_permissions,
-    module.ecr.manager_permissions
+    module.ecr.manager_permissions,
+    module.route53.manager_permissions,
+    module.ssm.manager_permissions
   )
 
   reader_permissions = concat(
@@ -55,7 +67,9 @@ locals {
     module.elasticloadbalancing.reader_permissions,
     module.autoscaling.reader_permissions,
     module.iam.reader_permissions,
-    module.ecr.reader_permissions
+    module.ecr.reader_permissions,
+    module.route53.reader_permissions,
+    module.ssm.reader_permissions
   )
 }
 
