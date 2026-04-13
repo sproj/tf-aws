@@ -38,6 +38,13 @@ helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
 - apply cert-manager/cert-manager-external-secrets
 - apply cert-manager/cluster-issuer
 
+- apply aws-lbc/aws-lbc-external-secrets.yaml
+- helm install eks/aws-load-balancer-controller
+```
+helm repo add eks https://aws.github.io/eks-charts
+
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller --namespace kube-system -f ./aws-lbc/aws-lbc-values.yaml
+```
 
 
 - helm add ingres-nginx: 
@@ -47,6 +54,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 - helm install ingress-nginx
 ```
 helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace \
-  --set controller.service.type=LoadBalancer \
-  --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=nlb
+  -f ./ingress-nginx/ingress-nginx-values.yaml
 ```
+
+run tf-aws/bootstrap/dns-records to create route53 ALIAS record for the domain
