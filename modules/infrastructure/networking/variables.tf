@@ -24,3 +24,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "subnet_tags" {
+  description = "Tags to apply to subnet(s) only"
+  type        = map(string)
+  default     = {}
+}

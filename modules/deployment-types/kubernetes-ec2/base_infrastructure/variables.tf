@@ -42,3 +42,9 @@ variable "additional_instance_policy_arns" {
   type        = list(string)
   default     = []
 }
+
+variable "subnet_tags" {
+  description = "Tags to apply to subnet(s) only"
+  type        = map(string)
+  default     = {}
+}

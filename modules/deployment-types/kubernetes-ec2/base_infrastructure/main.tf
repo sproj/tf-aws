@@ -5,6 +5,7 @@ module "networking" {
   availability_zones        = var.availability_zones
   name_prefix               = var.name_prefix
   tags                      = var.tags
+  subnet_tags               = var.subnet_tags
 }
 
 module "iam_instance_profile" {
