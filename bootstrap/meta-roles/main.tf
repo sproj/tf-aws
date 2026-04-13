@@ -84,7 +84,9 @@ resource "aws_iam_policy" "infrastructure_manager_policy" {
           "route53:ListHostedZones",
           "route53:ChangeTagsForResource",
           "route53:ListTagsForResource",
-          "route53:GetChange"
+          "route53:GetChange",
+          "route53:ChangeResourceRecordSets",
+          "route53:ListResourceRecordSets"
         ],
         Resource = ["*"]
       }

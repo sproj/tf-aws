@@ -9,7 +9,8 @@ locals {
       "route53:ListResourceRecordSets",
       "route53:GetChange",
       "route53:ChangeTagsForResource",
-      "route53:ListTagsForResource"
+      "route53:ListTagsForResource",
+      "route53:ChangeResourceRecordSets"
     ],
 
     manager = []
