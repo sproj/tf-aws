@@ -33,6 +33,7 @@ module "base_infrastructure" {
   allowed_ssh_cidr                = "${var.allowed_ssh_cidr}/32"
   name_prefix                     = var.name_prefix
   env                             = var.env
+  subnet_tags                     = { "kubernetes.io/role/elb" : 1 }
   additional_instance_policy_arns = [module.ebs_csi_policy.policy_arn, module.ssm_read_policy.policy_arn]
   tags = {
     Environment    = "dev"
