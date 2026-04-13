@@ -8,6 +8,7 @@
   ```
 - helm install external-secrets external-secrets/external-secrets --namespace external-secrets
 - apply cluster-secret-store
+
 - add ebs-csi-user secrets to kube-system namespace:
   ```
   kubectl create secret generic aws-secret \
@@ -25,10 +26,27 @@ helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
   -f ./ebs-csi/ebs-csi-values.yaml
 ```
 - apply storage-class
+
 - apply block-imds
+
 - install cert-manager:
   - helm repo add jetstack https://charts.jetstack.io 
   - helm install cert-manager jetstack/cert-manager \
     --namespace cert-manager \
     --create-namespace \
     --set crds.enabled=true
+- apply cert-manager/cert-manager-external-secrets
+- apply cert-manager/cluster-issuer
+
+
+
+- helm add ingres-nginx: 
+```
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+```
+- helm install ingress-nginx
+```
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace \
+  --set controller.service.type=LoadBalancer \
+  --set controller.service.annotations."service\.beta\.kubernetes\.io/aws-load-balancer-type"=nlb
+```
