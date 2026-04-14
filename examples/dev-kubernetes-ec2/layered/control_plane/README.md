@@ -57,4 +57,19 @@ helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx
   -f ./ingress-nginx/ingress-nginx-values.yaml
 ```
 
-run tf-aws/bootstrap/dns-records to create route53 ALIAS record for the domain
+- ONCE: run tf-aws/bootstrap/dns-records to create route53 ALIAS record for the domain
+
+- EVERY RESTART: patch nodes with providerID so LBC can register EC2 instances as NLB targets.
+  Get instance IDs: 
+  ```
+  aws ec2 describe-instances --filters "Name=private-ip-address,Values=," \
+  --query 'Reservations[].Instances[].[PrivateIpAddress,InstanceId,Placement.AvailabilityZone]' \
+  --output table \
+  --profile kubernetes-ec2-creator --region eu-west-1
+```
+Then patch each node: 
+  `kubectl patch node  -p '{"spec":{"providerID":"aws:////"}}'`
+Then restart LBC to force reconciliation: `kubectl rollout restart deployment aws-load-balancer-controller -n kube-system `
+Without this, LBC cannot register targets and the NLB will not forward traffic.
+                        
+The node IPs will also change on each restart since DHCP assigns them, so you won't be able to hardcode those either. You'll need to discover both the node names and IPs fresh each time via `kubectl get nodes -o wide.`
