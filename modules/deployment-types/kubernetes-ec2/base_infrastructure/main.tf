@@ -40,7 +40,14 @@ module "worker_nodes_sg" {
       protocol    = "-1"
       cidr_blocks = [var.vpc_cidr_block]
       description = "All traffic from VPC"
-    }
+    },
+    {
+      from_port   = 30000
+      to_port     = 32767
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "NodePort services (NLB forwarding)"
+    },
   ]
 
   egress_rules = [
@@ -90,7 +97,14 @@ module "master_sg" {
       to_port     = 65535
       cidr_blocks = [var.vpc_cidr_block]
       description = "Node/master UDP communication (flannel)"
-    }
+    },
+    {
+      from_port   = 30000
+      to_port     = 32767
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "NodePort services (NLB forwarding)"
+    },
   ]
 
   egress_rules = [
