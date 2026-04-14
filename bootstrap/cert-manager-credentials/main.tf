@@ -36,14 +36,13 @@ data "aws_iam_policy_document" "cert_manager_policy_document" {
   statement {
     effect = "Allow"
     actions = [
-      "route53:ChangeResourceRecordSets",
-      "route53:GetChange"
+      "route53:ChangeResourceRecordSets"
     ]
     resources = ["arn:aws:route53:::hostedzone/${data.terraform_remote_state.dns.outputs.zone_id}"]
   }
   statement {
     effect    = "Allow"
-    actions   = ["route53:ListHostedZonesByName"]
+    actions   = ["route53:ListHostedZonesByName", "route53:GetChange"]
     resources = ["*"]
   }
 }
