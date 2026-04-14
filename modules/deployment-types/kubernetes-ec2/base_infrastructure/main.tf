@@ -45,9 +45,10 @@ module "worker_nodes_sg" {
       from_port   = 30000
       to_port     = 32767
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "NodePort services (NLB forwarding)"
+      cidr_blocks = [var.allowed_ssh_cidr]
+      description = "NodePort services - personal IP only"
     },
+
   ]
 
   egress_rules = [
@@ -102,9 +103,10 @@ module "master_sg" {
       from_port   = 30000
       to_port     = 32767
       protocol    = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "NodePort services (NLB forwarding)"
+      cidr_blocks = [var.allowed_ssh_cidr]
+      description = "NodePort services - personal IP only"
     },
+
   ]
 
   egress_rules = [
