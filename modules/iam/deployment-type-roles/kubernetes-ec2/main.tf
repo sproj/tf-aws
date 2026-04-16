@@ -69,7 +69,7 @@ locals {
     module.iam.reader_permissions,
     module.ecr.reader_permissions,
     module.route53.reader_permissions,
-    module.ssm.reader_permissions
+    module.ssm.reader_permissions,
   )
 }
 
