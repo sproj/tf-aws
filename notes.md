@@ -134,6 +134,9 @@ cd base_infrastructure/ && terraform destroy
 
 Note: Parameter Store secrets and the `bootstrap/dns-records` Route53 record are not managed by the cluster Terraform layers and will persist after destroy.
 
+## Known tech debt / cleanup items
+- **`master-runtime.sh` hardcodes env and cluster name** — SSM parameter paths (`/dev/dev-k8s/k8s-api/...`) and the S3 bucket name (`tfaws-dev-secrets`) are hardcoded strings rather than using `$CLUSTER_NAME` or template variables injected by Terraform, unlike the `${cluster_name}` pattern used elsewhere in the same script.
+
 ## Known manual steps / limitations
 - **providerID** must be patched on every cluster restart (see above). Should eventually be automated in node startup scripts by querying IMDS for instance-id and AZ and passing `--provider-id` to kubelet.
 - **NLB DNS name** changes on each cluster recreation. Must update `bootstrap/dns-records` with the new `nlb_dns_name` and re-apply.
