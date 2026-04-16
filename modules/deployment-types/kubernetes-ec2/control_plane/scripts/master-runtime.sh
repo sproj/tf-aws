@@ -34,6 +34,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
 # Setup kubectl for ubuntu user
 mkdir -p /home/ubuntu/.kube
 cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
@@ -42,8 +44,44 @@ chown -R ubuntu:ubuntu /home/ubuntu/.kube
 # Add tls-server-name to kubeconfig
 sed -i "/server: https/a\\    tls-server-name: $PRIVATE_IP" /home/ubuntu/.kube/config
 
+
+# Read cluster_ca_certificate from admin.conf
+echo "Reading cluster_ca_certificate..."
+CLUSTER_CA_CERTIFICATE=$(kubectl config view --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+
+# Writing cluster_ca_certificate to SSM
+echo "Writing cluster_ca_certificate to SSM..."
+aws ssm put-parameter \
+--name /dev/dev-k8s/k8s-api/cluster_ca_certificate \
+--type SecureString \
+--overwrite \
+--value "$CLUSTER_CA_CERTIFICATE"
+
+# Read client_certificate from admin.conf
+echo "Reading client_certificate..."
+CLIENT_CERTIFICATE=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-certificate-data}')
+
+# Writing client_certificate to SSM
+echo "Writing client_certificate to SSM..."
+aws ssm put-parameter \
+--name /dev/dev-k8s/k8s-api/client_certificate \
+--type SecureString \
+--overwrite \
+--value "$CLIENT_CERTIFICATE"
+
+# Read client_key from admin.conf
+echo "Reading client_key..."
+CLIENT_KEY=$(kubectl config view --raw -o jsonpath='{.users[0].user.client-key-data}')
+
+# Writing client_key to SSM
+echo "Writing client_key to SSM..."
+aws ssm put-parameter \
+--name /dev/dev-k8s/k8s-api/client_key \
+--type SecureString \
+--overwrite \
+--value "$CLIENT_KEY"
+
 # Install Flannel
-export KUBECONFIG=/etc/kubernetes/admin.conf
 kubectl apply -f "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"
 
 # Allow scheduling on control plane (for single-node testing)
