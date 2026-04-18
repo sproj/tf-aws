@@ -138,6 +138,11 @@ Note: Parameter Store secrets and the `bootstrap/dns-records` Route53 record are
 - **`master-runtime.sh` hardcodes env and cluster name** — SSM parameter paths (`/dev/dev-k8s/k8s-api/...`) and the S3 bucket name (`tfaws-dev-secrets`) are hardcoded strings rather than using `$CLUSTER_NAME` or template variables injected by Terraform, unlike the `${cluster_name}` pattern used elsewhere in the same script.
 
 ## Known manual steps / limitations
+- **helm_operators first apply requires two passes** — `kubernetes_manifest` resources for CRD-backed types (ClusterSecretStore, ClusterIssuer, etc.) fail at plan time on a fresh cluster because the CRDs don't exist until the operator Helm charts are applied. Workaround:
+  ```bash
+  terraform apply -target=helm_release.external_secrets -target=helm_release.cert_manager  # install operators first
+  terraform apply                                                                             # then apply CRD-backed manifests
+  ```
 - **providerID** must be patched on every cluster restart (see above). Should eventually be automated in node startup scripts by querying IMDS for instance-id and AZ and passing `--provider-id` to kubelet.
 - **NLB DNS name** changes on each cluster recreation. Must update `bootstrap/dns-records` with the new `nlb_dns_name` and re-apply.
 - **Jaeger subpath** — Jaeger UI breaks at `/jaeger` because it expects to be served from `/`. Needs a separate subdomain (e.g. `jaeger.jonesalan404.dev`) or a rewrite annotation on its Ingress.
