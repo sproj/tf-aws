@@ -4,7 +4,7 @@ description: Current in-progress work and what comes next in the project
 type: project
 ---
 
-## In progress: helm_operators layer
+## Completed: helm_operators layer
 
 Building `examples/dev-kubernetes-ec2/layered/helm_operators/` to replace all manual post-cluster steps with Terraform.
 
