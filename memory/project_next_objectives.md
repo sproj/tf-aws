@@ -31,3 +31,6 @@ Building `examples/dev-kubernetes-ec2/layered/helm_operators/` to replace all ma
 - Ordering enforced via implicit Terraform dependency references where possible, explicit depends_on where needed
 
 **Why:** Eliminate all manual post-cluster steps so cluster is fully reproducible from terraform apply alone.
+
+### End-of-day small task
+- Set `TF_PLUGIN_CACHE_DIR=~/.terraform.d/plugin-cache` (e.g. in `~/.zshrc`) to eliminate repeated provider binary storage across roots.
