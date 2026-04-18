@@ -86,6 +86,13 @@ module "master_sg" {
       description = "Kubernetes API"
     },
     {
+      from_port   = 6443
+      to_port     = 6443
+      protocol    = "tcp"
+      cidr_blocks = [var.allowed_ssh_cidr]
+      description = "Kubernetes API - personal IP only"
+    },
+    {
       from_port   = 0
       to_port     = 65535
       protocol    = "tcp"

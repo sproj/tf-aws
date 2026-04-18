@@ -184,8 +184,7 @@ resource "helm_release" "cert_manager_chart" {
   depends_on = [kubernetes_namespace.cert_manager_namespace]
   namespace  = "cert-manager"
   name       = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
+  chart      = "https://charts.jetstack.io/charts/cert-manager-v1.16.2.tgz"
   set {
     name  = "crds.enabled"
     value = "true"
@@ -228,7 +227,8 @@ resource "helm_release" "ingress_nginx_chart" {
   depends_on = [kubernetes_namespace.ingress_nginx_namespace, helm_release.aws_lbc_chart]
   namespace  = "ingress-nginx"
   name       = "ingress-nginx"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
+  chart      = "https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.15.1/ingress-nginx-4.15.1.tgz"
   values     = [file("./ingress-nginx/ingress-nginx-values.yaml")]
+  wait       = false
+  timeout    = 600
 }

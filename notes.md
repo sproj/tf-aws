@@ -111,7 +111,6 @@ LBC requires a `providerID` on each node to register EC2 instances as NLB target
      --output table \
      --profile kubernetes-ec2-creator --region eu-west-1
    ```
-
 3. Patch each node:
    ```
    kubectl patch node <node-name> -p '{"spec":{"providerID":"aws:///<az>/<instance-id>"}}'
@@ -135,6 +134,7 @@ cd base_infrastructure/ && terraform destroy
 Note: Parameter Store secrets and the `bootstrap/dns-records` Route53 record are not managed by the cluster Terraform layers and will persist after destroy.
 
 ## Known tech debt / cleanup items
+- **Some helm charts require direct URLs** — Terraform's helm provider (v2.17.0) fails with "Chart.yaml file is missing" for any Helm repo whose `index.yaml` stores charts on an external backend (e.g. GitHub releases) rather than directly on the repo server. Affected charts so far: cert-manager (`https://charts.jetstack.io/charts/cert-manager-vX.Y.Z.tgz`) and ingress-nginx (`https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-X.Y.Z/ingress-nginx-X.Y.Z.tgz`). Workaround: omit `repository` and `version`, set `chart` to the direct tgz URL. To find the URL: `curl -s <repo-index-url>/index.yaml` and look for the `urls:` field for the desired chart version. Update URLs when upgrading.
 - **`master-runtime.sh` hardcodes env and cluster name** — SSM parameter paths (`/dev/dev-k8s/k8s-api/...`) and the S3 bucket name (`tfaws-dev-secrets`) are hardcoded strings rather than using `$CLUSTER_NAME` or template variables injected by Terraform, unlike the `${cluster_name}` pattern used elsewhere in the same script.
 
 ## Known manual steps / limitations
