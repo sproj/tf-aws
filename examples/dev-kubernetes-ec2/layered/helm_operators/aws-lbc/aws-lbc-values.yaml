@@ -1,0 +1,12 @@
+clusterName: dev-k8s
+cluster:
+  dnsDomain: cluster.local
+region: eu-west-1
+# ingressClass: nlb
+vpcId: vpc-020fd390e70a26261
+envSecretName: aws-lbc-credentials
+# envFrom:
+#   - secretRef:
+#     name: AWS_ACCES_KEY_ID
+#   - secretRef:
+#     name: AWS_ACCES_KEY_ID
