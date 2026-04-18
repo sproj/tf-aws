@@ -198,7 +198,7 @@ resource "kubernetes_manifest" "cert_manager_external_secrets" {
 }
 
 resource "kubernetes_manifest" "cert_manager_cluster_issuer" {
-  depends_on = [helm_release.cert_manager_chart]
+  depends_on = [helm_release.cert_manager_chart, kubernetes_manifest.cert_manager_external_secrets]
   manifest   = yamldecode(file("./cert-manager/cluster-issuer.yaml"))
 }
 
@@ -215,4 +215,20 @@ resource "helm_release" "aws_lbc_chart" {
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
   values     = [file("./aws-lbc/aws-lbc-values.yaml")]
+}
+
+# install ingress-nginx
+resource "kubernetes_namespace" "ingress_nginx_namespace" {
+  metadata {
+    name = "ingress-nginx"
+  }
+}
+
+resource "helm_release" "ingress_nginx_chart" {
+  depends_on = [kubernetes_namespace.ingress_nginx_namespace, helm_release.aws_lbc_chart]
+  namespace  = "ingress-nginx"
+  name       = "ingress-nginx"
+  repository = "https://kubernetes.github.io/ingress-nginx"
+  chart      = "ingress-nginx"
+  values     = [file("./ingress-nginx/ingress-nginx-values.yaml")]
 }
