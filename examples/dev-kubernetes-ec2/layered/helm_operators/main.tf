@@ -172,3 +172,32 @@ resource "kubernetes_manifest" "block_imds" {
   depends_on = [kubernetes_storage_class_v1.ebs_csi_storageclass]
   manifest   = yamldecode(file("./block-imds/block-imds.yaml"))
 }
+
+# Install cert-manager
+resource "kubernetes_namespace" "cert_manager_namespace" {
+  metadata {
+    name = "cert-manager"
+  }
+}
+
+resource "helm_release" "cert_manager_chart" {
+  depends_on = [kubernetes_namespace.cert_manager_namespace]
+  namespace  = "cert-manager"
+  name       = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
+  set {
+    name  = "crds.enabled"
+    value = "true"
+  }
+}
+
+resource "kubernetes_manifest" "cert_manager_external_secrets" {
+  depends_on = [helm_release.cert_manager_chart, kubernetes_manifest.cluster_secret_store]
+  manifest   = yamldecode(file("./cert-manager/cert-manager-external-secrets.yaml"))
+}
+
+resource "kubernetes_manifest" "cert_manager_cluster_issuer" {
+  depends_on = [helm_release.cert_manager_chart]
+  manifest   = yamldecode(file("./cert-manager/cluster-issuer.yaml"))
+}
