@@ -140,7 +140,7 @@ Note: Parameter Store secrets and the `bootstrap/dns-records` Route53 record are
 ## Known manual steps / limitations
 - **helm_operators first apply requires two passes** — `kubernetes_manifest` resources for CRD-backed types (ClusterSecretStore, ClusterIssuer, etc.) fail at plan time on a fresh cluster because the CRDs don't exist until the operator Helm charts are applied. Workaround:
   ```bash
-  terraform apply -target=helm_release.external_secrets -target=helm_release.cert_manager  # install operators first
+  terraform apply -target=helm_release.external_secrets -target=helm_release.cert_manager_chart  # install operators first
   terraform apply                                                                             # then apply CRD-backed manifests
   ```
 - **providerID** must be patched on every cluster restart (see above). Should eventually be automated in node startup scripts by querying IMDS for instance-id and AZ and passing `--provider-id` to kubelet.
