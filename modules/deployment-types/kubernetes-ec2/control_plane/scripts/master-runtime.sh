@@ -23,6 +23,15 @@ sysctl --system
 # Start containerd
 systemctl start containerd
 
+# Set providerID so that AWS LBC can register this node as an NLB target.
+# Must be written before kubeadm join so kubelet advertises it to the API server.
+echo "fetching instance id"
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+echo "fetching instance AZ"
+AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+echo "writing instance id and az to kubelet config"
+echo "KUBELET_EXTRA_ARGS=--provider-id=aws:///$AZ/$INSTANCE_ID" > /etc/default/kubelet
+
 # Initialize Kubernetes cluster
 echo "Initializing Kubernetes cluster..."
 kubeadm init \
