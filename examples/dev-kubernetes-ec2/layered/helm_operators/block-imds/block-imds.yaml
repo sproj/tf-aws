@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: block-imds
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: block-imds
+  template:
+    metadata:
+      labels:
+        app: block-imds
+    spec:
+      hostNetwork: true
+      hostPID: true
+      tolerations:
+        - operator: Exists # run on all nodes including control plane
+      initContainers:
+        - name: block-imds
+          image: registry.k8s.io/debian-iptables:v12.0.1
+          securityContext:
+            privileged: true
+          command:
+            - /bin/sh
+            - -c
+            - |
+              # Drop packets from pod CIDR to metadata service
+              # 10.244.0.0/16 is a flannel default pod network CIDR - if that value changes then this must too.
+              iptables -C FORWARD -d 169.254.169.254 -s 10.244.0.0/16 -j DROP 2>/dev/null || iptables -I FORWARD -d 169.254.169.254 -s 10.244.0.0/16 -j DROP
+              echo "IMDS block rule applied"
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.9
