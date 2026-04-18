@@ -95,32 +95,6 @@ cd bootstrap/dns-records/ && terraform apply
 ```
 This creates the Route53 ALIAS record pointing jonesalan404.dev at the NLB. Only needed once, but must be re-applied if the NLB DNS name changes (see known limitations below).
 
-### Every restart: patch providerID on nodes
-LBC requires a `providerID` on each node to register EC2 instances as NLB targets. This must be done manually after every cluster restart (nodes get new IPs and instance IDs via DHCP/autoscaling).
-
-1. Discover current nodes and IPs:
-   ```
-   kubectl get nodes -o wide
-   ```
-
-2. Resolve instance IDs and AZs for each node IP:
-   ```
-   aws ec2 describe-instances \
-     --filters "Name=private-ip-address,Values=<ip>" \
-     --query 'Reservations[].Instances[].[PrivateIpAddress,InstanceId,Placement.AvailabilityZone]' \
-     --output table \
-     --profile kubernetes-ec2-creator --region eu-west-1
-   ```
-3. Patch each node:
-   ```
-   kubectl patch node <node-name> -p '{"spec":{"providerID":"aws:///<az>/<instance-id>"}}'
-   ```
-
-4. Restart LBC to force reconciliation:
-   ```
-   kubectl rollout restart deployment aws-load-balancer-controller -n kube-system
-   ```
-
 ## Tearing down the cluster
 
 Destroy in reverse order:
@@ -143,7 +117,6 @@ Note: Parameter Store secrets and the `bootstrap/dns-records` Route53 record are
   terraform apply -target=helm_release.external_secrets -target=helm_release.cert_manager_chart  # install operators first
   terraform apply                                                                             # then apply CRD-backed manifests
   ```
-- **providerID** must be patched on every cluster restart (see above). Should eventually be automated in node startup scripts by querying IMDS for instance-id and AZ and passing `--provider-id` to kubelet.
 - **NLB DNS name** changes on each cluster recreation. Must update `bootstrap/dns-records` with the new `nlb_dns_name` and re-apply.
 - **Jaeger subpath** — Jaeger UI breaks at `/jaeger` because it expects to be served from `/`. Needs a separate subdomain (e.g. `jaeger.jonesalan404.dev`) or a rewrite annotation on its Ingress.
 - Region is hardcoded to eu-west-1 throughout.
