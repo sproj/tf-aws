@@ -109,3 +109,10 @@ resource "kubernetes_secret" "eso_reader_aws_credentials" {
   }
 }
 
+resource "helm_release" "external_secrets" {
+  namespace  = "external-secrets"
+  repository = "https://charts.external-secrets.io"
+  chart      = "external-secrets"
+  name       = "external-secrets"
+  depends_on = [kubernetes_namespace.external_secrets_namespace, kubernetes_secret.eso_reader_aws_credentials]
+}
