@@ -15,79 +15,12 @@ Each layer is applied from its directory under `examples/dev-kubernetes-ec2/laye
 cd base_infrastructure/ && terraform apply
 cd control_plane/       && terraform apply
 cd worker_nodes/        && terraform apply
+cd helm_operators/      && terraform apply
 ```
 
-### Post-apply: apply manifests to the cluster
-Once the cluster is reachable via SSH tunnel to master private IP, apply components in this order:
+`helm_operators` installs all cluster operators (ESO, EBS CSI, block-imds, cert-manager, AWS LBC, ingress-nginx) via the Helm and Kubernetes Terraform providers. It connects to the cluster API using TLS credentials written to SSM by `master-runtime.sh` at cluster init time.
 
-#### External Secrets Operator
-```
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/eso/external-secrets.namespace.yaml
-
-kubectl create secret generic eso-reader-aws-credentials \
-  --namespace external-secrets \
-  --from-literal=access-key-id=$(aws ssm get-parameter --name /dev/dev-k8s/eso-reader-ssm-access-key-id --with-decryption --query Parameter.Value --output text --profile super-user) \
-  --from-literal=secret-access-key=$(aws ssm get-parameter --name /dev/dev-k8s/eso-reader-ssm-secret-access-key --with-decryption --query Parameter.Value --output text --profile super-user)
-
-helm install external-secrets external-secrets/external-secrets --namespace external-secrets
-
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/eso/cluster-secret-store.yaml
-```
-
-#### EBS CSI Driver
-```
-kubectl create secret generic aws-secret \
-  --namespace kube-system \
-  --from-literal=key_id=$(aws ssm get-parameter --name /dev/dev-k8s/ebs-csi-ec2-access-key-id --with-decryption --query Parameter.Value --output text --profile super-user) \
-  --from-literal=access_key=$(aws ssm get-parameter --name /dev/dev-k8s/ebs-csi-ec2-secret-access-key --with-decryption --query Parameter.Value --output text --profile super-user)
-
-helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
-
-helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
-  --namespace kube-system \
-  -f examples/dev-kubernetes-ec2/layered/control_plane/ebs-csi/ebs-csi-values.yaml
-
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/ebs-csi/storageclass.yaml
-```
-
-#### Block IMDS (pod-level)
-```
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/block-imds.yaml
-```
-
-#### cert-manager
-```
-helm repo add jetstack https://charts.jetstack.io
-
-helm install cert-manager jetstack/cert-manager \
-  --namespace cert-manager \
-  --create-namespace \
-  --set crds.enabled=true
-
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/cert-manager/cert-manager-external-secrets.yaml
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/cert-manager/cluster-issuer.yaml
-```
-
-#### AWS Load Balancer Controller
-```
-kubectl apply -f examples/dev-kubernetes-ec2/layered/control_plane/aws-lbc/aws-lbc-external-secrets.yaml
-
-helm repo add eks https://aws.github.io/eks-charts
-
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
-  --namespace kube-system \
-  -f examples/dev-kubernetes-ec2/layered/control_plane/aws-lbc/aws-lbc-values.yaml
-```
-
-#### ingress-nginx
-```
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-
-helm install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx \
-  --create-namespace \
-  -f examples/dev-kubernetes-ec2/layered/control_plane/ingress-nginx/ingress-nginx-values.yaml
-```
+**First apply on a fresh cluster requires two passes** — see Known manual steps below.
 
 #### DNS records (one-time only)
 ```
