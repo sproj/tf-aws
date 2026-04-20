@@ -12,16 +12,19 @@
 Each layer is applied from its directory under `examples/dev-kubernetes-ec2/layered/`.
 
 ```
-cd base_infrastructure/ && terraform apply
-cd control_plane/       && terraform apply
-cd worker_nodes/        && terraform apply
-cd cluster_operators/   && terraform apply
-cd cluster_workload/    && terraform apply
+cd base_infrastructure/     && terraform apply
+cd control_plane/           && terraform apply
+cd worker_nodes/            && terraform apply
+cd cluster_operators/       && terraform apply
+cd cluster_workload/        && terraform apply
+cd cluster_observability/   && terraform apply
 ```
 
 `cluster_operators` installs ESO and cert-manager via Helm. These create the CRDs required by `cluster_workload`.
 
 `cluster_workload` installs EBS CSI, AWS LBC, and ingress-nginx via Helm, then applies all CRD-backed manifests (ClusterSecretStore, ExternalSecrets, ClusterIssuer, block-imds).
+
+`cluster_observability` creates the `observability` namespace and deploys a shared Jaeger instance. Applications send traces to `http://jaeger.observability.svc.cluster.local:4317`. Access the UI via `kubectl port-forward svc/jaeger 16686:16686 -n observability`.
 
 #### DNS record
 ```
@@ -48,6 +51,6 @@ Note: Parameter Store secrets persist after destroy. The `dns_records` Route53 r
 
 ## Known manual steps / limitations
 - **Wait before applying `dns_records`** — the NLB takes 2-3 minutes to reach active state after `cluster_workload` completes. Applying `dns_records` too early will read an empty hostname from the ingress-nginx service.
-- **Jaeger subpath** — Jaeger UI breaks at `/jaeger` because it expects to be served from `/`. Needs a separate subdomain (e.g. `jaeger.jonesalan404.dev`) or a rewrite annotation on its Ingress.
+- **Jaeger UI access** — currently via `kubectl port-forward` only. Adding an Ingress with subdomain `jaeger.jonesalan404.dev` is a future task (subpath routing breaks the UI).
 - Region is hardcoded to eu-west-1 throughout.
 - SSM policy scoped to `/dev/dev-k8s/*` — update if path convention changes.
