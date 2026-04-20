@@ -27,7 +27,7 @@ crash.*.log
 terraform.rc
 
 # slopsicles
-
+memory/
 
 # macOS system files
 .DS_Store
