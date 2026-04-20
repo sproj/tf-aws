@@ -4,33 +4,38 @@ description: Current in-progress work and what comes next in the project
 type: project
 ---
 
-## Completed: helm_operators layer
+## Completed: helm_operators split into cluster_operators + cluster_workload
 
-Building `examples/dev-kubernetes-ec2/layered/helm_operators/` to replace all manual post-cluster steps with Terraform.
+`helm_operators/` has been replaced by two layers:
+- `cluster_operators/` — installs Helm charts only (ESO, cert-manager). Creates CRDs. No CRD-dependent manifests.
+- `cluster_workload/` — applies everything else (EBS CSI, AWS LBC, ingress-nginx, ClusterSecretStore, ExternalSecrets, ClusterIssuer, block-imds).
 
-### Completed this session
-- `modules/infrastructure/ssm-policies/` — added SSM write policy (PutParameter scoped to `/dev/dev-k8s/k8s-api/{cluster_ca_certificate,client_certificate,client_key}`)
-- `examples/dev-kubernetes-ec2/layered/base_infrastructure/main.tf` — updated to attach ssm write policy to instance profile
-- `master-runtime.sh` — writes k8s TLS credentials to SSM after kubeadm init
-- `helm_operators/main.tf` — skeleton complete: backend, providers (aws/helm/kubernetes), remote state data source, SSM data sources for k8s certs, both providers configured with inline credentials
-- `helm_operators/variables.tf` and `dev-k8s.auto.tfvars` created
-- ESO: kubernetes_namespace and kubernetes_secret resources written and reviewed
+Layer apply order: base_infrastructure → control_plane → worker_nodes → cluster_operators → cluster_workload.
 
-### Next: continue helm_operators/main.tf in install order
-1. **ESO** (in progress) — namespace ✓, credentials secret ✓, still need: `helm_release` for ESO, `kubernetes_manifest` for ClusterSecretStore
-2. **EBS CSI** — credentials secret (bootstrap, same pattern as ESO), helm_release, storageclass manifest
-3. **Block IMDS** — kubernetes_manifest
-4. **cert-manager** — helm_release (with crds.enabled=true), ExternalSecret manifest, ClusterIssuer manifest
-5. **AWS LBC** — ExternalSecret manifest, helm_release (with values file)
-6. **ingress-nginx** — helm_release (with values file)
+The two-pass apply problem is eliminated: CRDs are guaranteed present by layer ordering.
 
-### Key design decisions made
+## Completed: providerID automation
+
+`master-runtime.sh` and `worker-runtime.sh` now query IMDS for instance-id and AZ at boot time and write `KUBELET_EXTRA_ARGS=--provider-id=aws:///<az>/<instance-id>` to `/etc/default/kubelet` before kubelet/kubeadm starts. No more manual patching after cluster restart.
+
+## Future: IAM structure review
+
+Currently three overlapping IAM mechanisms are in play:
+1. IAM users created per application (e.g. eso-reader, ebs-csi, cert-manager, aws-lbc) with credentials stored in SSM
+2. Node instance role with permissions attached (used by nodes at runtime)
+3. `kubernetes-ec2-creator` assumed role with permissions (used by Terraform)
+
+Suspicion: one or the other of (1) and (2) should suffice — the duplication may be unnecessary. Worth reviewing whether application credentials could be replaced entirely by instance role + IRSA-equivalent, or vice versa.
+
+## Known manual steps / limitations (see notes.md for full detail)
+
+- ~~**helm_operators first apply requires two passes**~~ — fixed by splitting into cluster_operators + cluster_workload layers.
+- **NLB DNS name** changes on each cluster recreation; must re-apply `bootstrap/dns-records`.
+- **Jaeger subpath** — Jaeger UI breaks at `/jaeger`; needs its own subdomain or rewrite annotation.
+
+## Key design decisions
+
 - k8s TLS creds stored in SSM (written by master-runtime.sh), read by helm_operators via data sources
-- host/tls_server_name come from control_plane remote state outputs (not SSM), since public IP changes on rebuild
-- Helm and kubernetes providers both need identical connection config (separate plugin processes)
-- Ordering enforced via implicit Terraform dependency references where possible, explicit depends_on where needed
-
-**Why:** Eliminate all manual post-cluster steps so cluster is fully reproducible from terraform apply alone.
-
-### End-of-day small task
-- Set `TF_PLUGIN_CACHE_DIR=~/.terraform.d/plugin-cache` (e.g. in `~/.zshrc`) to eliminate repeated provider binary storage across roots.
+- host/tls_server_name come from control_plane remote state outputs (not SSM)
+- helm charts with externally-hosted tgz use direct URL in `chart` field (Terraform helm provider v2.17.0 bug workaround)
+- providerID written to /etc/default/kubelet before kubeadm starts kubelet, so no restart needed
