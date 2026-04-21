@@ -16,6 +16,12 @@ resource "aws_ssm_parameter" "url_shortener_postgres_password" {
   value = random_password.url_shortener_postgres_password.result
 }
 
+  resource "aws_ssm_parameter" "url_shortener_postgres_db" {                                                                                                                                   
+    name  = "/${var.env}/${var.name_prefix}/url-shortener/POSTGRES_DB"                                                                                                                         
+    type  = "String"                                                                                                                                                                           
+    value = "url_shortener"
+  }
+
 resource "kubernetes_job" "apply_url_shortener_postgres_user" {
   depends_on = [kubernetes_manifest.postgres_external_secrets, kubernetes_manifest.postgres_stateful_set, kubernetes_manifest.postgres_service]
   metadata {
@@ -44,11 +50,11 @@ resource "kubernetes_job" "apply_url_shortener_postgres_user" {
       | grep -q 1 \
       || psql -h "$HOST" -U "$POSTGRES_USER" -c "CREATE USER $URL_SHORTENER_POSTGRES_USER WITH PASSWORD '$URL_SHORTENER_POSTGRES_PASSWORD'"                                                    
                                                                                                                                                                                                
-    psql -h "$HOST" -U "$POSTGRES_USER" -tc "SELECT 1 FROM pg_database WHERE datname='url_shortener'" \                                                                                        
+    psql -h "$HOST" -U "$POSTGRES_USER" -tc "SELECT 1 FROM pg_database WHERE datname='$URL_SHORTENER_POSTGRES_DB'" \                                                                                        
       | grep -q 1 \                                                                                                                                                                            
-      || psql -h "$HOST" -U "$POSTGRES_USER" -c "CREATE DATABASE url_shortener OWNER $URL_SHORTENER_POSTGRES_USER"                                                                             
+      || psql -h "$HOST" -U "$POSTGRES_USER" -c "CREATE DATABASE $URL_SHORTENER_POSTGRES_DB OWNER $URL_SHORTENER_POSTGRES_USER"                                                                             
                   
-    psql -h "$HOST" -U "$POSTGRES_USER" -c "GRANT ALL PRIVILEGES ON DATABASE url_shortener TO $URL_SHORTENER_POSTGRES_USER"                                                                    
+    psql -h "$HOST" -U "$POSTGRES_USER" -c "GRANT ALL PRIVILEGES ON DATABASE $URL_SHORTENER_POSTGRES_DB TO $URL_SHORTENER_POSTGRES_USER"                                                                    
   SCRIPT
           ]
           env {
@@ -84,6 +90,15 @@ resource "kubernetes_job" "apply_url_shortener_postgres_user" {
               secret_key_ref {
                 name = "databases-secrets"
                 key  = "URL_SHORTENER_POSTGRES_PASSWORD"
+              }
+            }
+          }
+          env {
+            name = "URL_SHORTENER_POSTGRES_DB"
+            value_from {
+              secret_key_ref {
+                name = "databases-secrets"
+                key  = "URL_SHORTENER_POSTGRES_DB"
               }
             }
           }
