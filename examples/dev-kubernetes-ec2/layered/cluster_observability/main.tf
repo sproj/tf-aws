@@ -65,18 +65,10 @@ provider "kubernetes" {
   client_key             = base64decode(data.aws_ssm_parameter.client_key.value)
 }
 
-resource "kubernetes_namespace" "observability_namespace" {
-  metadata {
-    name = "observability"
-  }
-}
-
 resource "kubernetes_manifest" "jaeger_deployment" {
-  depends_on = [kubernetes_namespace.observability_namespace]
-  manifest   = yamldecode(file("./jaeger/jaeger-deployment.yaml"))
+  manifest = yamldecode(file("./jaeger/jaeger-deployment.yaml"))
 }
 
 resource "kubernetes_manifest" "jaeger_service" {
-  depends_on = [kubernetes_namespace.observability_namespace]
-  manifest   = yamldecode(file("./jaeger/jaeger-service.yaml"))
+  manifest = yamldecode(file("./jaeger/jaeger-service.yaml"))
 }
