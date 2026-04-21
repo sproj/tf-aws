@@ -22,6 +22,9 @@ cd cluster_databases/       && terraform apply
 ```
 
 `cluster_operators` installs ESO and cert-manager via Helm. These create the CRDs required by `cluster_workload`.
+It also installs the prometheus operator which is used by any application in any namespace in the cluster with a ServiceMonitor with any label.
+Upon deploying your applicatoin check `kubectl port-forward -n observability svc/kube-prometheus-stack-prometheus 9090:9090` and `http://localhost:9090/targets`
+for your application. You should see it in state 'UP'. If in state 'DOWN' it will tell you why. If not at all check `http://localhost:9090/service-discovery`.
 
 `cluster_workload` installs EBS CSI, AWS LBC, and ingress-nginx via Helm, then applies all CRD-backed manifests (ClusterSecretStore, ExternalSecrets, ClusterIssuer, block-imds).
 
