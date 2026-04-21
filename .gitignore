@@ -111,3 +111,4 @@ __pycache__/
 
 # pkrvars files
 *.pkrvars.hcl
+memory/project_next_objectives.md
