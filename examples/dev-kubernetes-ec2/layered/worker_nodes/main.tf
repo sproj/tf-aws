@@ -44,7 +44,10 @@ module "worker_nodes" {
   iam_instance_profile_name = data.terraform_remote_state.base_infrastructure.outputs.instance_profile_name
   ami_id                    = var.ami_id
   name_prefix               = var.name_prefix
-  instance_type = "t3.micro"
+  instance_type             = var.instance_type
+  root_volume_size          = var.root_volume_size
+  desired_capacity          = 2
+  max_size                  = 3
   tags = {
     Environment    = "dev"
     DeploymentType = "kubernetes-ec2"

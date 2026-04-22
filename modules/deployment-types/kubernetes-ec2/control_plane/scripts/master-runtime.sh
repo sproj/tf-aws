@@ -94,7 +94,7 @@ aws ssm put-parameter \
 kubectl apply -f "https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml"
 
 # Allow scheduling on control plane (for single-node testing)
-kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
+# kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
 
 # Generate and store join information
 echo "Generating join information for workers..."

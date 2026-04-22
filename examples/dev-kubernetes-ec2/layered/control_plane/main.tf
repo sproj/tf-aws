@@ -34,6 +34,8 @@ module "control_plane" {
   iam_instance_profile_name = data.terraform_remote_state.base_infrastructure.outputs.instance_profile_name
   name_prefix               = var.name_prefix
   key_name                  = "${var.name_prefix}-key"
+  instance_type             = var.instance_type
+  root_volume_size          = var.root_volume_size
   tags = {
     Environment    = "dev"
     DeploymentType = "kubernetes-ec2"

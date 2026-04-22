@@ -52,5 +52,11 @@ variable "min_size" {
 variable "max_size" {
   description = "Maximum number of worker nodes"
   type        = number
-  default     = 2
+  default     =1
+}
+
+variable "root_volume_size" {
+  description = "Volume size of /dev/sda1 on nodes"
+  default     = 16
+  type        = number
 }

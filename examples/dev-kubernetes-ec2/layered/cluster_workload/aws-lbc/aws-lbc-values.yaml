@@ -3,7 +3,7 @@ cluster:
   dnsDomain: cluster.local
 region: eu-west-1
 # ingressClass: nlb
-vpcId: vpc-020fd390e70a26261
+vpcId: vpc-03f7ba88c241f0cf3 # this value changes every time base_infrastructure is re-created
 envSecretName: aws-lbc-credentials
 # envFrom:
 #   - secretRef:
