@@ -14,6 +14,7 @@ module "worker_nodes" {
   desired_capacity     = var.desired_capacity
   min_size             = var.min_size
   max_size             = var.max_size
+  root_volume_size     = var.root_volume_size
   name                 = "${var.name_prefix}-nodes"
   user_data            = base64encode(local.worker_user_data)
   tags                 = var.tags

@@ -54,6 +54,12 @@ variable "instance_type" {
   default     = "t3.small"
 }
 
+variable "root_volume_size" {
+  description = "Volume size of /dev/sda1 on nodes"
+  default     = 8
+  type        = number
+}
+
 variable "key_name" {
   description = "SSH key name for EC2 access"
   type        = string

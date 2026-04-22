@@ -38,6 +38,12 @@ variable "max_size" {
   type        = number
 }
 
+variable "root_volume_size" {
+  description = "Volume size of /dev/sda1 on nodes"
+  default     = 16
+  type        = number
+}
+
 variable "name" {
   description = "Name the autoscaling group"
   type        = string

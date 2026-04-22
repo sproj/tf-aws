@@ -8,6 +8,14 @@ resource "aws_launch_template" "nodes" {
     name = var.iam_instance_profile
   }
 
+  block_device_mappings {
+    device_name = "/dev/sda1"
+    ebs {
+      volume_size           = var.root_volume_size
+      volume_type           = "gp3"
+      delete_on_termination = true
+    }
+  }
   vpc_security_group_ids = var.security_group_ids
 
   tag_specifications {
