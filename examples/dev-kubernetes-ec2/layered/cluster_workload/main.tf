@@ -41,6 +41,17 @@ data "terraform_remote_state" "control_plane" {
   }
 }
 
+# Read the VPC id written by the base_infrastructure layer
+data "terraform_remote_state" "base_infrastructure" {
+  backend = "s3"
+  config = {
+    bucket  = "tfaws-dev-state-backend"
+    key     = "examples/kubernetes-ec2/base_infrastructure/terraform.tfstate"
+    region  = "eu-west-1"
+    profile = "kubernetes-ec2-creator"
+  }
+}
+
 # Read the TLS credentials written to SSM by master-runtime.sh at cluster init
 data "aws_ssm_parameter" "cluster_ca_certificate" {
   name            = "/${var.env}/${var.name_prefix}/k8s-api/cluster_ca_certificate"
