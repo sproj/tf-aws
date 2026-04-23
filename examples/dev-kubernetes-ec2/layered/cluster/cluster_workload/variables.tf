@@ -12,3 +12,8 @@ variable "aws_region" {
   type        = string
   default     = "eu-west-1"
 }
+
+variable "vpc_id" {
+  description = "ID of the VPC where the AWS Load Balancer Controller will create load balancers"
+  type        = string
+}
