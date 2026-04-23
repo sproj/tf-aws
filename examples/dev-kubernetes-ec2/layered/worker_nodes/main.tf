@@ -46,8 +46,8 @@ module "worker_nodes" {
   name_prefix               = var.name_prefix
   instance_type             = var.instance_type
   root_volume_size          = var.root_volume_size
-  desired_capacity          = 2
-  max_size                  = 3
+  desired_capacity          = var.asg_desired_capacity
+  max_size                  = var.asg_max_capacity
   tags = {
     Environment    = "dev"
     DeploymentType = "kubernetes-ec2"

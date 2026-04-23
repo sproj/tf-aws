@@ -21,6 +21,18 @@ variable "instance_type" {
   default     = "t3.medium"
 }
 
+variable "asg_desired_capacity" {
+  description = "Desired number of worker nodes"
+  type        = number
+  default     = 1
+}
+
+variable "asg_max_capacity" {
+  description = "Maximum allowed number of worker nodes"
+  type        = number
+  default     = 3
+}
+
 variable "root_volume_size" {
   description = "Volume size of /dev/sda1 on nodes"
   default     = 16
