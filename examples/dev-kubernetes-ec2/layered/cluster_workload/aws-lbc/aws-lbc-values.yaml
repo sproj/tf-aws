@@ -1,12 +1,10 @@
 clusterName: dev-k8s
 cluster:
   dnsDomain: cluster.local
-region: eu-west-1
-# ingressClass: nlb
-vpcId: vpc-03f7ba88c241f0cf3 # this value changes every time base_infrastructure is re-created
 envSecretName: aws-lbc-credentials
-# envFrom:
-#   - secretRef:
-#     name: AWS_ACCES_KEY_ID
-#   - secretRef:
-#     name: AWS_ACCES_KEY_ID
+
+# Set from variable by `templatefile` call in aws_lbc.tf
+region: ${region}
+# this value changes every time base_infrastructure is re-created
+# Set from base_infrastructure output by `templatefile` call in aws_lbc.tf
+vpcId: ${vpcId}
