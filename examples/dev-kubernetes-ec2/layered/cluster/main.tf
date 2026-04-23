@@ -14,45 +14,30 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.0"
     }
-  }
-
-  backend "s3" {
-    bucket         = "tfaws-dev-state-backend"
-    key            = "examples/kubernetes-ec2/cluster_workload/terraform.tfstate"
-    region         = "eu-west-1"
-    profile        = "kubernetes-ec2-creator"
-    dynamodb_table = "tfaws-dev-lock-backend"
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.0"
+    }
   }
 }
 
 provider "aws" {
-  region  = "eu-west-1"
+  region  = var.aws_region
   profile = "kubernetes-ec2-creator"
 }
 
-# Read the public and private IPs written by the control_plane layer
-data "terraform_remote_state" "control_plane" {
+# Read the infra root module state for the k8s API endpoint
+data "terraform_remote_state" "infra" {
   backend = "s3"
   config = {
     bucket  = "tfaws-dev-state-backend"
-    key     = "examples/kubernetes-ec2/control_plane/terraform.tfstate"
+    key     = "examples/kubernetes-ec2/layered/terraform.tfstate"
     region  = "eu-west-1"
     profile = "kubernetes-ec2-creator"
   }
 }
 
-# Read the VPC id written by the base_infrastructure layer
-data "terraform_remote_state" "base_infrastructure" {
-  backend = "s3"
-  config = {
-    bucket  = "tfaws-dev-state-backend"
-    key     = "examples/kubernetes-ec2/base_infrastructure/terraform.tfstate"
-    region  = "eu-west-1"
-    profile = "kubernetes-ec2-creator"
-  }
-}
-
-# Read the TLS credentials written to SSM by master-runtime.sh at cluster init
+# Read k8s TLS credentials written to SSM by kubeadm on the control plane node
 data "aws_ssm_parameter" "cluster_ca_certificate" {
   name            = "/${var.env}/${var.name_prefix}/k8s-api/cluster_ca_certificate"
   with_decryption = true
@@ -68,10 +53,9 @@ data "aws_ssm_parameter" "client_key" {
   with_decryption = true
 }
 
-# Avoid repeating these across both provider blocks
 locals {
-  k8s_host            = "https://${data.terraform_remote_state.control_plane.outputs.master_public_ip}:6443"
-  k8s_tls_server_name = data.terraform_remote_state.control_plane.outputs.master_private_ip
+  k8s_host            = "https://${data.terraform_remote_state.infra.outputs.master_public_ip}:6443"
+  k8s_tls_server_name = data.terraform_remote_state.infra.outputs.master_private_ip
 }
 
 provider "helm" {
@@ -92,3 +76,31 @@ provider "kubernetes" {
   client_key             = base64decode(data.aws_ssm_parameter.client_key.value)
 }
 
+module "cluster_operators" {
+  source      = "./cluster_operators"
+  env         = var.env
+  name_prefix = var.name_prefix
+}
+
+module "cluster_workload" {
+  source      = "./cluster_workload"
+  depends_on  = [module.cluster_operators]
+  env         = var.env
+  name_prefix = var.name_prefix
+  aws_region  = var.aws_region
+  vpc_id      = data.terraform_remote_state.infra.outputs.vpc_id
+}
+
+module "cluster_databases" {
+  source      = "./cluster_databases"
+  depends_on  = [module.cluster_workload]
+  env         = var.env
+  name_prefix = var.name_prefix
+}
+
+module "cluster_observability" {
+  source      = "./cluster_observability"
+  depends_on  = [module.cluster_workload]
+  env         = var.env
+  name_prefix = var.name_prefix
+}
