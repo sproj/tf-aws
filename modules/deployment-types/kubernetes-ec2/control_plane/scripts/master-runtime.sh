@@ -32,11 +32,15 @@ AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone
 echo "writing instance id and az to kubelet config"
 echo "KUBELET_EXTRA_ARGS=--provider-id=aws:///$AZ/$INSTANCE_ID" > /etc/default/kubelet
 
+echo "fetching instance public ip"
+PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+
 # Initialize Kubernetes cluster
 echo "Initializing Kubernetes cluster..."
 kubeadm init \
   --pod-network-cidr=$POD_NETWORK_CIDR \
-  --service-cidr=$SERVICE_CIDR
+  --service-cidr=$SERVICE_CIDR \
+  --apiserver-cert-extra-sans=$PUBLIC_IP
 
 if [ $? -ne 0 ]; then
     echo "ERROR: kubeadm init failed"
