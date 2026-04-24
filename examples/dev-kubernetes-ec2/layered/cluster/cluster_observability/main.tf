@@ -9,10 +9,18 @@ terraform {
   }
 }
 
+resource "kubernetes_namespace_v1" "observability_namespace" {
+  metadata {
+    name = "observability"
+  }
+}
+
 resource "kubernetes_manifest" "jaeger_deployment" {
-  manifest = yamldecode(file("${path.module}/jaeger/jaeger-deployment.yaml"))
+  depends_on = [kubernetes_namespace_v1.observability_namespace]
+  manifest   = yamldecode(file("${path.module}/jaeger/jaeger-deployment.yaml"))
 }
 
 resource "kubernetes_manifest" "jaeger_service" {
-  manifest = yamldecode(file("${path.module}/jaeger/jaeger-service.yaml"))
+  depends_on = [kubernetes_namespace_v1.observability_namespace]
+  manifest   = yamldecode(file("${path.module}/jaeger/jaeger-service.yaml"))
 }
