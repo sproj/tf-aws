@@ -61,7 +61,7 @@ locals {
 provider "helm" {
   kubernetes {
     host                   = local.k8s_host
-    tls_server_name        = local.k8s_tls_server_name
+    # tls_server_name        = local.k8s_tls_server_name
     cluster_ca_certificate = base64decode(data.aws_ssm_parameter.cluster_ca_certificate.value)
     client_certificate     = base64decode(data.aws_ssm_parameter.client_certificate.value)
     client_key             = base64decode(data.aws_ssm_parameter.client_key.value)
@@ -70,7 +70,7 @@ provider "helm" {
 
 provider "kubernetes" {
   host                   = local.k8s_host
-  tls_server_name        = local.k8s_tls_server_name
+  # tls_server_name        = local.k8s_tls_server_name
   cluster_ca_certificate = base64decode(data.aws_ssm_parameter.cluster_ca_certificate.value)
   client_certificate     = base64decode(data.aws_ssm_parameter.client_certificate.value)
   client_key             = base64decode(data.aws_ssm_parameter.client_key.value)
