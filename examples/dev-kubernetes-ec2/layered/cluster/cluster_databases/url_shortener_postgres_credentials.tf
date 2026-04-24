@@ -1,7 +1,7 @@
 resource "random_password" "url_shortener_postgres_password" {
   length           = 32
   special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
+  override_special = "!#$&*()-_=+[]{}<>:?"
 }
 
 resource "aws_ssm_parameter" "url_shortener_postgres_user" {
@@ -68,6 +68,10 @@ resource "kubernetes_job" "apply_url_shortener_postgres_user" {
     set -e
     export PGPASSWORD="$POSTGRES_PASSWORD"
     HOST=postgres-service.databases.svc.cluster.local
+    until pg_isready -h $HOST -U "$POSTGRES_USER"; do
+      echo "Waiting for postgres..."
+      sleep 3
+    done
     psql \
     -h $HOST \
     -U "$POSTGRES_USER" \

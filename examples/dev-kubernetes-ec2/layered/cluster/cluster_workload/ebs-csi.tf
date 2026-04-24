@@ -27,7 +27,9 @@ resource "helm_release" "ebs_csi_driver" {
   chart      = "aws-ebs-csi-driver"
   name       = "aws-ebs-csi-driver"
   depends_on = [kubernetes_secret.ebs_csi_driver_credentials]
-  values     = [file("${path.module}/ebs-csi/ebs-csi-values.yaml")]
+  values     = [templatefile("${path.module}/ebs-csi/ebs-csi-values.yaml", {
+    "region": var.aws_region
+  })]
 }
 
 resource "kubernetes_storage_class_v1" "ebs_csi_storageclass" {

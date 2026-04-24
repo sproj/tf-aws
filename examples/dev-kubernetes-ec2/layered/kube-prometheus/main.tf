@@ -14,10 +14,6 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.0"
     }
-    random = {
-      source  = "hashicorp/random"
-      version = "~> 3.0"
-    }
   }
 }
 
@@ -26,7 +22,6 @@ provider "aws" {
   profile = "kubernetes-ec2-creator"
 }
 
-# Read the infra root module state for the k8s API endpoint
 data "terraform_remote_state" "infra" {
   backend = "s3"
   config = {
@@ -37,7 +32,6 @@ data "terraform_remote_state" "infra" {
   }
 }
 
-# Read k8s TLS credentials written to SSM by kubeadm on the control plane node
 data "aws_ssm_parameter" "cluster_ca_certificate" {
   name            = "/${var.env}/${var.name_prefix}/k8s-api/cluster_ca_certificate"
   with_decryption = true
@@ -71,26 +65,4 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.aws_ssm_parameter.cluster_ca_certificate.value)
   client_certificate     = base64decode(data.aws_ssm_parameter.client_certificate.value)
   client_key             = base64decode(data.aws_ssm_parameter.client_key.value)
-}
-
-module "cluster_workload" {
-  source      = "./cluster_workload"
-  env         = var.env
-  name_prefix = var.name_prefix
-  aws_region  = var.aws_region
-  vpc_id      = data.terraform_remote_state.infra.outputs.vpc_id
-}
-
-module "cluster_databases" {
-  source      = "./cluster_databases"
-  depends_on  = [module.cluster_workload]
-  env         = var.env
-  name_prefix = var.name_prefix
-}
-
-module "cluster_observability" {
-  source      = "./cluster_observability"
-  depends_on  = [module.cluster_workload]
-  env         = var.env
-  name_prefix = var.name_prefix
 }
