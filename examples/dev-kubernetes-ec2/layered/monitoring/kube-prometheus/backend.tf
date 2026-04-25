@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
     bucket         = "tfaws-dev-state-backend"
-    key            = "examples/kubernetes-ec2/kube-prometheus/terraform.tfstate"
+    key            = "examples/kubernetes-ec2/monitoring/kube-prometheus/terraform.tfstate"
     region         = "eu-west-1"
     profile        = "kubernetes-ec2-creator"
     dynamodb_table = "tfaws-dev-lock-backend"

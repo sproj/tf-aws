@@ -1,6 +1,7 @@
 locals {
   worker_user_data = templatefile("${path.module}/scripts/worker-runtime.sh", {
-    cluster_name = var.name_prefix
+    cluster_name       = var.name_prefix
+    extra_kubelet_args = var.extra_kubelet_arguments
   })
 }
 

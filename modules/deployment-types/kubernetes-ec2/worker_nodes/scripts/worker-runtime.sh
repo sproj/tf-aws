@@ -21,7 +21,7 @@ INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
 echo "fetching instance AZ"
 AZ=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
 echo "writing instance id and az to kubelet config"
-echo "KUBELET_EXTRA_ARGS=--provider-id=aws:///$AZ/$INSTANCE_ID" > /etc/default/kubelet
+echo "KUBELET_EXTRA_ARGS=--provider-id=aws:///$AZ/$INSTANCE_ID ${extra_kubelet_args}" > /etc/default/kubelet
 
 # Start containerd and kubelet
 systemctl start containerd

@@ -38,7 +38,7 @@ variable "control_plane_root_volume_size" {
 variable "worker_instance_type" {
   description = "EC2 instance type for the master node"
   type        = string
-  default     = "t3.medium"
+  default     = "t3.small"
 }
 
 variable "worker_root_volume_size" {
