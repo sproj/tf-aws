@@ -28,6 +28,7 @@ terraform.rc
 
 # slopsicles
 memory/
+docs/learning
 
 # macOS system files
 .DS_Store
