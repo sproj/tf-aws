@@ -22,6 +22,7 @@ module "worker_nodes" {
   max_size                  = var.asg_max_capacity
   tags = {
     Environment    = "dev"
+    NodeType       = "worker"
     DeploymentType = "kubernetes-ec2"
     ManagedBy      = "terraform"
   }

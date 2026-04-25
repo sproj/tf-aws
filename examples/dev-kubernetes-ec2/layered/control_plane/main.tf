@@ -21,6 +21,7 @@ module "control_plane" {
   root_volume_size          = var.root_volume_size
   tags = {
     Environment    = "dev"
+    NodeType       = "control"
     DeploymentType = "kubernetes-ec2"
     ManagedBy      = "terraform"
   }

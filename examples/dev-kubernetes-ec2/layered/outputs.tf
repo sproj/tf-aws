@@ -32,3 +32,13 @@ output "merge_kubeconfig_command" {
   description = "Command to merge kubeconfig from the deployed cluster"
   value       = "./merge_kubeconfig.sh ${var.name_prefix} ${module.control_plane.master_public_ip} ${module.control_plane.master_private_ip}"
 }
+
+output "iam_instance_profile_name" {
+  description = "IAM instance profile name for EC2 nodes"
+  value = module.base_infrastructure.instance_profile_name
+}
+
+output "node_security_group_id" {
+  description = "Security group IDs for Kubernetes worker nodes"
+  value       = module.base_infrastructure.node_security_group_id
+}
