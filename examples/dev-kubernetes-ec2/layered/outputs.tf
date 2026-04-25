@@ -42,3 +42,8 @@ output "node_security_group_id" {
   description = "Security group IDs for Kubernetes worker nodes"
   value       = module.base_infrastructure.node_security_group_id
 }
+
+output "public_subnet_ids" {
+  description = "IDs of the public subnets"
+  value       = module.base_infrastructure.public_subnet_ids
+}

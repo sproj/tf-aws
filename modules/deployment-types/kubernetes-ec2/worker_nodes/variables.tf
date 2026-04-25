@@ -9,6 +9,12 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "Name of the cluster to join"
+  type        = string
+  default     = ""
+}
+
 variable "security_group_ids" {
   description = "List of security group IDs for the nodes"
   type        = list(string)

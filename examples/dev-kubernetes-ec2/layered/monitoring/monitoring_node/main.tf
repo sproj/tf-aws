@@ -25,12 +25,13 @@ data "terraform_remote_state" "infra" {
 }
 
 module "monitoring_node" {
-  source                    = "../../../../modules/deployment-types/kubernetes-ec2/worker_nodes"
+  source                    = "../../../../../modules/deployment-types/kubernetes-ec2/worker_nodes"
   public_subnet_ids         = data.terraform_remote_state.infra.outputs.public_subnet_ids
   security_group_ids        = [data.terraform_remote_state.infra.outputs.node_security_group_id]
   iam_instance_profile_name = data.terraform_remote_state.infra.outputs.iam_instance_profile_name
   ami_id                    = var.ami_id
   name_prefix               = "${var.name_prefix}-monitoring"
+  cluster_name              = var.name_prefix
   instance_type             = var.instance_type
   root_volume_size          = var.root_volume_size
   desired_capacity          = var.asg_desired_capacity
