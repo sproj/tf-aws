@@ -23,13 +23,13 @@ resource "random_password" "rabbitmq_user_password" {
 }
 
 resource "aws_ssm_parameter" "rabbit_mq_username" {
-  name  = "/${var.env}/${var.name_prefix}/url-shortener/rabbitmq-username"
+  name  = "/${var.env}/${var.name_prefix}/rabbitmq/rabbitmq-username"
   type  = "SecureString"
-  value = "postgres"
+  value = "rabbitmq_manager"
 }
 
 resource "aws_ssm_parameter" "rabbitmq_user_password" {
-  name  = "/${var.env}/${var.name_prefix}/url-shortener/rabbitmq-password"
+  name  = "/${var.env}/${var.name_prefix}/rabbitmq/rabbitmq-password"
   type  = "SecureString"
   value = random_password.rabbitmq_user_password.result
 }
