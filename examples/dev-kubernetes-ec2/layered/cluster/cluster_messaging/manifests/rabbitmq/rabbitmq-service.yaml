@@ -1,0 +1,19 @@
+# ClusterIP service — rabbitmq is internal only
+# App connects to: rabbitmq-service:5672                                                                                                                                                     
+# Management UI accessible via: kubectl port-forward svc/rabbitmq-service 15672:15672 -n rabbitmq
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+  namespace: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+    component: rabbitmq
+  ports:
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+    - port: 15672
+      targetPort: 15672
+      name: management
