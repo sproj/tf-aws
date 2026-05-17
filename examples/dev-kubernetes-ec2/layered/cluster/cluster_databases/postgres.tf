@@ -25,20 +25,20 @@ resource "kubernetes_namespace" "databases_namespace" {
 
 resource "kubernetes_manifest" "postgres_external_secrets" {
   depends_on = [kubernetes_namespace.databases_namespace]
-  manifest   = yamldecode(file("${path.module}/manifests/postgres-external-secrets.yaml"))
+  manifest   = yamldecode(file("${path.module}/manifests/postgres/postgres-external-secrets.yaml"))
 }
 
 resource "kubernetes_manifest" "postgres_stateful_set" {
   depends_on = [kubernetes_namespace.databases_namespace]
-  manifest   = yamldecode(file("${path.module}/manifests/postgres-statefulset.yaml"))
+  manifest   = yamldecode(file("${path.module}/manifests/postgres/postgres-statefulset.yaml"))
 }
 
 resource "kubernetes_manifest" "postgres_headless_service" {
   depends_on = [kubernetes_namespace.databases_namespace]
-  manifest   = yamldecode(file("${path.module}/manifests/headless-service.yaml"))
+  manifest   = yamldecode(file("${path.module}/manifests/postgres/postgres-headless-service.yaml"))
 }
 
 resource "kubernetes_manifest" "postgres_service" {
   depends_on = [kubernetes_namespace.databases_namespace]
-  manifest   = yamldecode(file("${path.module}/manifests/postgres-service.yaml"))
+  manifest   = yamldecode(file("${path.module}/manifests/postgres/postgres-service.yaml"))
 }
