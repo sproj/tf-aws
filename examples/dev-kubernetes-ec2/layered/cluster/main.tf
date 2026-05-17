@@ -88,6 +88,13 @@ module "cluster_databases" {
   name_prefix = var.name_prefix
 }
 
+module "cluster_messaging" {
+  source      = "./cluster_messaging"
+  depends_on  = [module.cluster_workload]
+  env         = var.env
+  name_prefix = var.name_prefix
+}
+
 module "cluster_observability" {
   source      = "./cluster_observability"
   depends_on  = [module.cluster_workload]
